@@ -1,0 +1,49 @@
+<!-- Modal in primo piano centrale alla pagina per il login -->
+
+<div *ngIf="isModalShown" [config]="{backdrop: 'static'}" [config]="{ show: true }" (onHidden)="onHidden()" bsModal
+    #autoShownModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-auto-name">
+
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header m-auto text-center">
+                <h3 id="dialog-static-name" class="modal-title fs-2">Un mondo di <br> intrattenimento <br> in un
+                    semplice click!</h3>
+            </div>
+            <div class="modal-body">
+                <ng-container *ngIf="(auth$ | async)?.token===null">
+                    <p class="h5" style="opacity: 1;">Inserisci username e password per il LOGIN</p>
+                    <form class="row" [formGroup]="reactiveLogin" (ngSubmit)="onLogin()">
+                        <div class="col-12 col-md-9 p-3">
+                            <div class="pt-0">
+                                <input class="form-control" type="text" id="user" name="user" formControlName="user"
+                                    placeholder="Username">
+                            </div>
+                            <div class="pt-3">
+                                <input type="password" class="form-control" id="InputPassword"
+                                    formControlName="password" placeholder="Password" >
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3 align-content-center">
+                            <div class="d-grid gap-2"><button class="btn accedi" type="submit"
+                                    [disabled]="!reactiveLogin.valid">Accedi</button></div>
+                        </div>
+                    </form>
+                    <div class="row pt-4">
+                        <p class="h5 col-12 col-md-9 m-auto pb-2" style="opacity: 1;">Non hai un account?</p>
+                        <div class="col-12 col-md-3 align-content-center">
+                            <div class="d-grid gap-2">
+                                <button class="btn registra" type="button" routerLink="../register">Registrati</button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="(auth$ | async)?.token!==null">
+                    <h3>LOGIN EFFETTUATO CON SUCCESSO, {{(auth$ | async)?.nomeCompleto}}!</h3>
+                </ng-container>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+
+</div>

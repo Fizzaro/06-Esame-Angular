@@ -1,0 +1,1 @@
+export type ChiamataHttp = "GET" | "POST" | "PUT" | "DELETE" 

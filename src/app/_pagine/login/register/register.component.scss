@@ -1,0 +1,55 @@
+@import "../../../../variabili.scss";
+.modal-content {
+    background-color: $primaryColor;
+    border-left: 10px solid $secondaryColor;
+    border-right: 10px solid $secondaryColor;
+    border-radius: 0px;
+}
+h3 {
+    color: $darkColor;
+}
+h4 {
+    color: $darkColor;
+}
+h5 {
+    color: $darkColor;
+    text-decoration: underline;
+}
+.bgForm {
+    background-color:$primaryColor;
+}
+
+input.ng-touched.ng-invalid {
+    border: 2px solid red;
+   
+}
+
+.noValid {
+    color: $darkColor;
+    font-weight: bolder;
+    text-decoration: underline;
+}
+
+#alertPassword, #msgCF {
+    color:$darkColor;
+    text-align: center;
+}
+
+button.registra {
+    font-weight: bolder;
+    color: $darkColor;
+    background-color: $secondaryColor;
+}
+
+button.accedi {
+    font-weight: bolder;
+    color: $lightColor;
+    background-color: $tertiaryColor;
+}
+
+.btn-link {
+    font-weight: bolder;
+    color: $tertiaryColor;
+    text-decoration: none;
+}
+
