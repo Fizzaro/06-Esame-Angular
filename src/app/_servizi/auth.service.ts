@@ -8,6 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 export class AuthService {
 
   static auth:Auth
+  loggato: boolean =false
   private authSub$:BehaviorSubject<Auth>
 
   constructor() {
@@ -42,8 +43,10 @@ export class AuthService {
     const tmp:string|null = localStorage.getItem("auth")
     let auth:Auth
     if (tmp !== null) {
+      this.loggato=true
       return auth=JSON.parse(tmp)
     } else {
+      this.loggato=false
       return auth= {
         token: null,
         idUtente: null,

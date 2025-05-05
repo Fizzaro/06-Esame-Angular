@@ -1,0 +1,23 @@
+<ng-container *ngIf="caricaMediaQ">
+        <carousel [itemsPerSlide]="itemsPerSlide" [singleSlideOffset]="singleSlideOffset" [startFromIndex]="5"
+                [interval]="0">
+                <slide *ngFor="let slide of slides; let index=index">
+                        <img [src]="slide.image" alt="image slide">
+                </slide>
+        </carousel>
+
+</ng-container>
+<ng-container *ngIf="!caricaMediaQ">
+        <div class="spinner-border text-light" role="status">
+                <span class="visually-hidden">Loading...</span>
+        </div>
+</ng-container>
+
+<div>
+        <button type="button" class="btn btn-info" (click)="addSlide()">Add Slide
+        </button>
+        <button type="button" class="btn btn-info" (click)="removeSlide()">Remove Current
+        </button>
+        <button type="button" class="btn btn-info" (click)="removeSlide(2)">Remove #3
+        </button>
+</div>

@@ -1,14 +1,14 @@
-import { HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpRequest } from '@angular/common/http';
+
 import { Component } from '@angular/core';
-import { BehaviorSubject, map, take, tap } from 'rxjs';
+import { Router } from '@angular/router';
+import { BehaviorSubject, delay, map, take, tap } from 'rxjs';
 import { ApiService } from 'src/app/_servizi/api.service';
 import { AuthService } from 'src/app/_servizi/auth.service';
-import { IRispostaServer } from 'src/app/interface/interface';
 import { Auth } from 'src/app/type/auth.type';
 import { Film } from 'src/app/type/film.type';
 
 @Component({
-  selector: 'app-home',
+  selector: 'home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
@@ -23,40 +23,42 @@ export class HomeComponent {
 
   constructor(
     private authService: AuthService,
-    private apiFilm: ApiService,
-    private http: HttpClient
+    private api: ApiService,
+    private router: Router
   ) {
     this.auth$ = this.authService.getSubAuth()
-    this.auth$.pipe(map(x => this.token = x.token)).subscribe()
+    this.auth$.pipe(
+      map(x => {
+        this.token = x.token
+        if (this.token==null) {
+          this.router.navigateByUrl('login/access')
+        } else {
+          setTimeout(()=>this.apiFilm(), 500)
+        }
+      })
+    ).subscribe()
 
-    if (this.token !== null) {
-      let headers = new HttpHeaders
-      headers = headers.append('Authorization', 'Bearer ' + this.token);
 
-      console.log(this.token)
-
-      this.http.get<HttpEvent<IRispostaServer>>("http://localhost/CodexLaravel/public/api/films", { headers: headers }).subscribe()
+    for (let i = 0; i < 4; i++) {
+      this.addSlide();
     }
-
-    this.apiFilm.getFilms(null).pipe(
-    map(x => this.films = x.data),
-    take(5),
-    tap(x => console.log(x))
-  ).subscribe()
-
-for (let i = 0; i < 4; i++) {
-  this.addSlide();
-}
   }
 
-addSlide(): void {
-  this.slides.push({
-    image: `../../../assets/loc${this.slides.length % 8 + 1}.jpg`
-  });
-}
+  apiFilm() {
+    this.api.getFilms(null).pipe(
+      take(1),
+      tap(x => console.log("apriFilm", x))
+    ).subscribe(x => this.films = x.data)
+  }
 
-removeSlide(index ?: number): void {
-  const toRemove = index ? index : this.activeSlideIndex;
-  this.slides.splice(toRemove, 1);
-}
+  addSlide(): void {
+    this.slides.push({
+      image: `../../../assets/loc${this.slides.length % 8 + 1}.jpg`
+    });
+  }
+
+  removeSlide(index?: number): void {
+    const toRemove = index ? index : this.activeSlideIndex;
+    this.slides.splice(toRemove, 1);
+  }
 }

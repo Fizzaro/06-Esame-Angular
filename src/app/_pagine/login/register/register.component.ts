@@ -1,17 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { BehaviorSubject, concatMap, map, Observable, Subject, Subscriber, take, tap } from 'rxjs';
+import { BehaviorSubject, map, Subject } from 'rxjs';
 import { ApiService } from 'src/app/_servizi/api.service';
 import { AuthService } from 'src/app/_servizi/auth.service';
 import { UtilityService } from 'src/app/_servizi/utility.service';
-import { IRispostaServer } from 'src/app/interface/interface';
 import { Auth } from 'src/app/type/auth.type';
 import { Comune } from 'src/app/type/comune.type';
-import { Recapito } from 'src/app/type/recapito.type';
 import { Registra } from 'src/app/type/registra.type';
-import { Utente } from 'src/app/type/utente.type';
-
 
 @Component({
   selector: 'app-register',
@@ -69,11 +65,11 @@ export class RegisterComponent {
 
   leggiCitta() {
     const citta=this.reactiveForm.controls['nascita'].value;
-    // if (citta.length>0) {
-      this.api.getComuni(null).pipe(
+    if (citta.length>2) {
+      this.api.getComuni(citta).pipe(
         map(x => this.cittaNascita = x.data),
       ).subscribe()
-    // }
+    }
   }
 
   ngOnInit() {
@@ -99,7 +95,6 @@ export class RegisterComponent {
   ngOnDestroy() {
     this.distruggi$.next()
   }
-
 
   //Proprietà e metodi per controllare la validità del codice fiscale
   messCodFisc: string = ''

@@ -43,7 +43,7 @@ export class ApiService {
         if (parametri !== null) {
           return this.http.post<IRispostaServer>(url, parametri)
         } else {
-          return new Observable<IRispostaServer>(Subscriber=>Subscriber.next({ 'data': null, 'message': null, 'error': "NO_PARAMETRO" }))
+          return new Observable<IRispostaServer>(Subscriber => Subscriber.next({ 'data': null, 'message': null, 'error': "NO_PARAMETRO" }))
         }
         break
       case "PUT": return this.http.put<IRispostaServer>(url, parametri)
@@ -113,15 +113,37 @@ export class ApiService {
   }
 
   /**
-   * 
+   * Api per registrare un nuovo utente
    * @param parametri object con i dati per la registrazione
    * @returns Observable<IRispostaServer>
    */
   public postRegistraUtente(parametri: Registra): Observable<IRispostaServer> {
-      return this.httpGenerica(["registra"], "POST", parametri)
+    return this.httpGenerica(["registra"], "POST", parametri)
   }
 
-  
+  /**
+   * Api per caricare gli utenti
+   * @param utente string per la ricerca di un utente | number come id di un utente
+   * @param statoPermesso per la ricerca secondo lo stato o il permesso
+   * @returns Observable<IRispostaServer>
+   */
+  public getUtente(utente: string | number | null, statoPermesso: 'permesso' | 'stato' | null = null): Observable<IRispostaServer> {
+    if (typeof utente === 'string') {
+      return this.httpGenerica(["utenti?", utente], "GET")
+    } else if (typeof utente === 'number') {
+      if (statoPermesso == null) {
+        return this.httpGenerica(["utenti", utente], "GET")
+      } else return this.httpGenerica(["utenti/", statoPermesso, utente], "GET")
+    } else {
+      return this.httpGenerica(["utenti"], "GET")
+    }
+  }
+
+  /**
+   * Api per caricare i film
+   * @param film string per la ricerca di un film | number come id di un film
+   * @returns Observable<IRispostaServer>
+   */
   public getFilms(film: string | number | null): Observable<IRispostaServer> {
     if (typeof film === 'string') {
       return this.httpGenerica(["films?", film], "GET")
@@ -132,4 +154,51 @@ export class ApiService {
     }
   }
 
+  /**
+   * Api per caricare i recapiti
+   * @param recapito number come id di un recapito
+   * @param tipologiaUtente per la ricerca secondo la tipologia o l'utente
+   * @returns Observable<IRispostaServer>
+   */
+  public getRecapiti(recapito: number | null, tipologiaUtente: 'tipologia' | 'utente' | null = null): Observable<IRispostaServer> {
+    if (typeof recapito === 'number') {
+      if (tipologiaUtente == null) {
+        return this.httpGenerica(["recapiti", recapito], "GET")
+      } else return this.httpGenerica(["recapiti", tipologiaUtente, recapito], "GET")
+    } else {
+      return this.httpGenerica(["recapiti"], "GET")
+    }
+  }
+
+  /**
+   * Api per caricare gli indirizzi
+   * @param indirizzo number come id di un indirizzo
+   * @param tipologiaUtente per la ricerca secondo la tipologia o l'utente
+   * @returns Observable<IRispostaServer>
+   */
+  public getIndirizzi(indirizzo: number | null, tipologiaUtente: 'tipologia' | 'utente' | null = null): Observable<IRispostaServer> {
+    if (typeof indirizzo === 'number') {
+      if (tipologiaUtente == null) {
+        return this.httpGenerica(["indirizzi", indirizzo], "GET")
+      } else return this.httpGenerica(["indirizzi", tipologiaUtente, indirizzo], "GET")
+    } else {
+      return this.httpGenerica(["indirizzi"], "GET")
+    }
+  }
+
+  /**
+   * Api per caricare tutte le tipologie di indirizzo
+   * @returns Observable<IRispostaServer>
+   */
+  public getTipologieIndirizzo(): Observable<IRispostaServer> {
+    return this.httpGenerica(["tipologieIndirizzo"], "GET")
+  }
+
+  /**
+   * Api per caricare tutte le tipologie di recapito
+   * @returns Observable<IRispostaServer>
+   */
+  public getTipologieRecapito(): Observable<IRispostaServer> {
+    return this.httpGenerica(["tipologieRecapito"], "GET")
+  }
 }

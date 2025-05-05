@@ -6,9 +6,12 @@ import { AppComponent } from './app.component';
 import { NavbarComponent } from './_componentiGenerali/navbar/navbar.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { PiePaginaComponent } from './_componentiGenerali/pie-pagina/pie-pagina.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { AuthIntercept } from './_interceptor/auth.interceptor';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 
 @NgModule({
@@ -24,9 +27,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ReactiveFormsModule,
     ModalModule,
     HttpClientModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    CarouselModule.forRoot(),
+    TypeaheadModule.forRoot()
   ],
-  providers: [],
+  exports: [
+  ],
+  providers:[
+    { provide: HTTP_INTERCEPTORS, useClass: AuthIntercept, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

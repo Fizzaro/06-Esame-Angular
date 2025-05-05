@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { sha512 } from 'js-sha512';
 import { jwtDecode } from 'jwt-decode';
 
@@ -16238,7 +16239,15 @@ export class UtilityService {
     }
   }
 
-
+  /**
+   * Funzione che genera il codice fiscale
+   * @param nome string
+   * @param cognome string
+   * @param sesso string 'femmina' o 'maschio'
+   * @param dataNascita string yyyy/mm/dd
+   * @param localita string
+   * @returns string
+   */
   static generaCodFisc(nome: string, cognome: string, sesso: string, dataNascita: string, localita: string): string {
 
     var result: string = 'Attendo'
@@ -16595,7 +16604,6 @@ CF=CF_MOD_ORA
   }
     return CF+=lettera_controllo
   }
-
 
 
 }

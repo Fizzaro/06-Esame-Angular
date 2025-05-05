@@ -2,4 +2,60 @@
 
 nav.navbar {
     background-color: $primaryColor;
+
+    .dropdown-item:hover {
+        background-color: $secondaryColor;
+    }
+}
+
+.modal-content {
+    background-color: $primaryColor;
+    border-left: 10px solid $secondaryColor;
+    border-right: 10px solid $secondaryColor;
+    border-radius: 0px;
+}
+.list-group-item {
+    color: $tertiaryColor;
+    background-color: $primaryColor;
+    border: none;
+}
+tr, th, td {
+    background-color: $primaryColor;
+}
+h3 {
+    color: $darkColor;
+}
+h5 {
+    color: $darkColor;
+    text-decoration: underline;
+}
+.bgForm {
+    background-color:$primaryColor;
+}
+input.ng-touched.ng-invalid {
+    border: 2px solid red;
+   
+}
+
+.noValid {
+    color: $darkColor;
+    font-weight: bolder;
+    text-decoration: underline;
+}
+
+#alertPassword, #msgCF {
+    color:$darkColor;
+    text-align: center;
+}
+
+button.registra {
+    font-weight: bolder;
+    color: $darkColor;
+    background-color: $secondaryColor;
+}
+
+button.accedi {
+    font-weight: bolder;
+    color: $lightColor;
+    background-color: $tertiaryColor;
 }

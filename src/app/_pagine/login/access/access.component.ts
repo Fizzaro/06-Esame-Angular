@@ -1,9 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { sha512 } from 'js-sha512';
+import { Router } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { BehaviorSubject, catchError, delay, Observable, Observer, of, Subject, take, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, Observer, of, Subject, take, takeUntil } from 'rxjs';
 import { ApiService } from 'src/app/_servizi/api.service';
 import { AuthService } from 'src/app/_servizi/auth.service';
 import { UtilityService } from 'src/app/_servizi/utility.service';
@@ -19,7 +18,9 @@ export class AccessComponent {
 
   reactiveLogin!: FormGroup
   auth$: BehaviorSubject<Auth>
+  erroreLogin:string = ''
   private distruggi$ = new Subject<void>
+  loggato: boolean = false
 
   constructor(
     private fb: FormBuilder,
@@ -52,17 +53,12 @@ export class AccessComponent {
   password: string = ''
   shaPssw: string = ''
 
-  onInput(event: Event) {
-    console.log(sha512((<HTMLInputElement>event.target).value))
-  }
   ngOnInit() {
-
     //Form di login
     this.reactiveLogin = this.fb.group({
       'user': new FormControl('', [Validators.required, Validators.maxLength(40)]),
       'password': new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/)])
     })
-
 
   }
 
@@ -110,8 +106,10 @@ export class AccessComponent {
           }
           this.authService.setSubAuth(auth)
           this.authService.salvaAuthLocalStorage(auth)
-          console.log(auth)
+          //console.log("AUTH",this.authService.leggiAuthLocalStorage())
           this.router.navigateByUrl('home')
+        } else {
+          this.erroreLogin= 'ATTENZIONE: '+ rit.message
         }
       },
       error: (err) => {

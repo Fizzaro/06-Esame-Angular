@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { UikitModule } from 'src/app/_condivisi/uikit/uikit.module';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
   imports: [
     CommonModule,
     HomeRoutingModule,
-    CarouselModule.forRoot()
-  ]
+    CarouselModule.forRoot(),
+    UikitModule
+]
 })
 export class HomeModule { }
