@@ -1,0 +1,11 @@
+@import "../../../variabili.scss";
+
+div {
+    height: 500px;
+
+    h1 {
+        color: $lightColor;
+        font-weight: bolder;
+        padding-top: 25%;
+    }
+}

@@ -1,0 +1,42 @@
+@import "../../../../variabili.scss";
+
+.container {
+    border: 2px dotted darkblue;
+    height: 100px;
+    text-align: center;
+    font-size: larger;
+    cursor: pointer;
+
+    p {
+        color: $lightColor;
+    }
+}
+
+.errore {
+    display: flex;
+    text-align: center;
+    color: darkred;
+    font-weight: bolder;
+
+    h5 {
+        margin: auto;
+    }
+}
+.back {
+    background-color: $primaryColor;
+    border: 1px solid $secondaryColor;
+}
+
+.dragDropHover {
+    background-color: $tertiaryColor;
+}
+
+.elimina {
+    color: $lightColor;
+    background-color: darkred;
+}
+
+.carica {
+    color: $darkColor;
+    background-color: $secondaryColor;
+}

@@ -12,13 +12,21 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { AuthIntercept } from './_interceptor/auth.interceptor';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { DettaglioComponent } from './_condivisi/dettaglio/dettaglio.component';
+import { NotFoundComponent } from './_pagine/not-found/not-found.component';
+import { PulsanteDirective } from './_direttive/pulsante.directive';
+import { BarraNavigazioneComponent } from './_componentiGenerali/barra-navigazione/barra-navigazione.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
-    PiePaginaComponent
+    PiePaginaComponent,
+    DettaglioComponent,
+    NotFoundComponent,
+    PulsanteDirective,
+    BarraNavigazioneComponent
   ],
   imports: [
     BrowserModule,

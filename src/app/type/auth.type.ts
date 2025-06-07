@@ -1,8 +1,9 @@
 export type Auth = {
-    'token': string | null
+    'token': string | null,
+    'scadenza': number | null,
     'idUtente': number | null,
-    'stato': number | null,
-    'permesso': number | null,
-    'azioni': number | null,
+    'attivo': boolean | null,
+    'amministratore': boolean | null,
+    'membro': boolean | null,
     'nomeCompleto': string |null
 }

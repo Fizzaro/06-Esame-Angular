@@ -1,0 +1,22 @@
+<form name="uploadFile" #formUpload>
+    <div class="container w-75 border border-primary align-content-center" DragDrop (rilascio)="controllaFiles($event)"
+        (click)="inputFile.click()">
+        <input type="file" multiple (change)="changeInput($event)" #inputFile hidden>
+        <p>Trascina i tuoi file qui</p>
+    </div>
+    <div class="ng-container errore p-2" *ngIf="errore!==''">
+        <h5>{{errore}}</h5>
+    </div>
+    <div class="ng-container" *ngIf="filesDaCaricare!==[]">
+        <div class="ng-container" *ngFor="let file of filesDaCaricare">
+            <div class="row w-75 m-auto back py-1">
+                <div class="w-50 m-auto">{{file.name}}</div>
+                <div class="w-50 m-auto text-end"><button class="btn elimina"
+                        (click)="eliminaFile(file.name)">Elimina</button></div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex align-content-center m-2">
+        <button type="button" (click)="invia()" class="btn carica m-auto" [disabled]="btnInvia">CARICA</button>
+    </div>
+</form>

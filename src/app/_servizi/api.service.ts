@@ -8,6 +8,9 @@ import { sha512 } from 'js-sha512';
 import { Utente } from '../type/utente.type';
 import { Registra } from '../type/registra.type';
 import { STRING_TYPE } from '@angular/compiler';
+import { Indirizzo } from '../type/indirizzo.type';
+import { Recapito } from '../type/recapito.type';
+import { Categoria } from '../type/categoria.type';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +49,12 @@ export class ApiService {
           return new Observable<IRispostaServer>(Subscriber => Subscriber.next({ 'data': null, 'message': null, 'error': "NO_PARAMETRO" }))
         }
         break
-      case "PUT": return this.http.put<IRispostaServer>(url, parametri)
+      case "PUT":
+        if (parametri !== null) {
+          return this.http.put<IRispostaServer>(url, parametri)
+        } else {
+          return new Observable<IRispostaServer>(Subscriber => Subscriber.next({ 'data': null, 'message': null, 'error': "NO_PARAMETRO" }))
+        }
         break
       case "DELETE": return this.http.delete<IRispostaServer>(url)
         break
@@ -89,7 +97,6 @@ export class ApiService {
 
     return this.getLogin1(hashUsername).pipe(
       take(1),
-      tap(x => console.log("Login fase 1: ", x)),
       map(x => {
         const sale = x.data.sale
         const cifrata = UtilityService.cifraPssw(hashPssw, sale)
@@ -99,18 +106,11 @@ export class ApiService {
     )
   }
 
-  /**
-   * Api per caricare i comuni
-   * @param comune stringa per la ricerca di un comune
-   * @returns Observable<IRispostaServer>
-   */
-  public getComuni(comune: string | null): Observable<IRispostaServer> {
-    if (comune) {
-      return this.httpGenerica(["comuni?", comune], "GET")
-    } else {
-      return this.httpGenerica(["comuni"], "GET")
-    }
+  public modificaPassword(idUtente:number, vecchiaPassword:string, nuovaPassword:string): Observable<IRispostaServer> {
+    return this.httpGenerica(['accedi', idUtente, vecchiaPassword, nuovaPassword], "GET")
   }
+
+  /*************** API UTENTE *****************/
 
   /**
    * Api per registrare un nuovo utente
@@ -129,15 +129,35 @@ export class ApiService {
    */
   public getUtente(utente: string | number | null, statoPermesso: 'permesso' | 'stato' | null = null): Observable<IRispostaServer> {
     if (typeof utente === 'string') {
-      return this.httpGenerica(["utenti?", utente], "GET")
+      return this.httpGenerica(["utenti?cerca=", utente], "GET")
     } else if (typeof utente === 'number') {
       if (statoPermesso == null) {
         return this.httpGenerica(["utenti", utente], "GET")
-      } else return this.httpGenerica(["utenti/", statoPermesso, utente], "GET")
+      } else return this.httpGenerica(["utenti", statoPermesso, utente], "GET")
     } else {
       return this.httpGenerica(["utenti"], "GET")
     }
   }
+
+  /**
+   * Api per eliminare gli utenti
+   * @param idUtente number
+   * @returns Observable<IRispostaServer>
+   */
+  public deleteUtenti(idUtente: number): Observable<IRispostaServer> {
+    return this.httpGenerica(["utenti", idUtente], "DELETE")
+  }
+
+  public cambiaPermesso(idUtente: number, tipoPermesso: "amministratore" | "membro" | "ospite"): Observable<IRispostaServer> {
+    return this.httpGenerica(['utenti', tipoPermesso, idUtente], "GET")
+  }
+
+  public cambiaStato(idUtente: number, tipoStato: "attiva" | "disattiva" | "sospendi"): Observable<IRispostaServer> {
+    return this.httpGenerica(['utenti', tipoStato, idUtente], "GET")
+  }
+
+
+  /*************** API FILM E CATEGORIE *****************/
 
   /**
    * Api per caricare i film
@@ -154,36 +174,173 @@ export class ApiService {
     }
   }
 
+
   /**
-   * Api per caricare i recapiti
-   * @param recapito number come id di un recapito
+   * Api per caricare le categorie
+   * @param categoria string per la ricerca di una categoria | number come id di una categoria
+   * @returns Observable<IRispostaServer>
+   */
+  public getCategorie(categoria: string | number | null): Observable<IRispostaServer> {
+    if (typeof categoria === 'string') {
+      return this.httpGenerica(["categorie?", categoria], "GET")
+    } else if (typeof categoria === 'number') {
+      return this.httpGenerica(["categorie", categoria], "GET")
+    } else {
+      return this.httpGenerica(["categorie"], "GET")
+    }
+  }
+
+    /**
+   * Api per creare le categorie
+   * @param Partial<Categoria> payload con dati 
+   * @returns Observable<IRispostaServer>
+   */
+  public postCategorie(categoria: Partial<Categoria>): Observable<IRispostaServer> {
+    return this.httpGenerica(['categorie'], "POST", categoria)
+  }
+
+  /**
+   * Api per modificare le categorie
+   * @param idCategoria number
+   * @param Partial<Categoria> payload con dati da modificare 
+   * @returns Observable<IRispostaServer>
+   */
+  public putCategorie(idCategoria: number, categoria: Partial<Categoria>): Observable<IRispostaServer> {
+    return this.httpGenerica(['categorie', idCategoria], "PUT", categoria)
+  }
+
+  /**
+   * Api per eliminare le categorie
+   * @param idCategoria number
+   * @returns Observable<IRispostaServer>
+   */
+  public deleteCategorie(idCategoria: number): Observable<IRispostaServer> {
+    return this.httpGenerica(['categorie', idCategoria], "DELETE")
+  }
+
+
+  /*************** API SERIE ED EPISODI *****************/
+
+  /**
+   * Api per caricare le serie
+   * @param serie string per la ricerca di una serie | number come id di una serie
+   * @returns Observable<IRispostaServer>
+   */
+  public getSeries(serie: string | number | null): Observable<IRispostaServer> {
+    if (typeof serie === 'string') {
+      return this.httpGenerica(["series?", serie], "GET")
+    } else if (typeof serie === 'number') {
+      return this.httpGenerica(["series", serie], "GET")
+    } else {
+      return this.httpGenerica(["series"], "GET")
+    }
+  }
+
+
+  /**
+   * Api per caricare gli episodi
+   * @param id number
+   * @param serieEpisodi per la ricerca secondo la serie
+   * @returns Observable<IRispostaServer>
+   */
+  public getEpisodi(id: number | null, serieEpisodi: 'serie' | null = null): Observable<IRispostaServer> {
+    if (typeof id === 'number') {
+      if (serieEpisodi == null) {
+        return this.httpGenerica(["episodi", id], "GET")
+      } else return this.httpGenerica(["episodi", serieEpisodi, id], "GET")
+    } else {
+      return this.httpGenerica(["episodi"], "GET")
+    }
+  }
+
+  /*************** API COMUNI, INDIRIZZI E RECAPITI *****************/
+
+  /**
+   * Api per caricare gli indirizzi
+   * @param id number
    * @param tipologiaUtente per la ricerca secondo la tipologia o l'utente
    * @returns Observable<IRispostaServer>
    */
-  public getRecapiti(recapito: number | null, tipologiaUtente: 'tipologia' | 'utente' | null = null): Observable<IRispostaServer> {
-    if (typeof recapito === 'number') {
+  public getIndirizzi(id: number | null, tipologiaUtente: 'tipologia' | 'utente' | null = null): Observable<IRispostaServer> {
+    if (typeof id === 'number') {
       if (tipologiaUtente == null) {
-        return this.httpGenerica(["recapiti", recapito], "GET")
-      } else return this.httpGenerica(["recapiti", tipologiaUtente, recapito], "GET")
+        return this.httpGenerica(["indirizzi", id], "GET")
+      } else return this.httpGenerica(["indirizzi", tipologiaUtente, id], "GET")
+    } else {
+      return this.httpGenerica(["indirizzi"], "GET")
+    }
+  }
+
+  /**
+   * Api per creare gli indirizzi
+   * @param Partial<Indirizzo> payload con dati 
+   * @returns Observable<IRispostaServer>
+   */
+  public postIndirizzi(indirizzo: Partial<Indirizzo>): Observable<IRispostaServer> {
+    return this.httpGenerica(['indirizzi'], "POST", indirizzo)
+  }
+
+  /**
+   * Api per modificare gli indirizzi
+   * @param idIndirizzo number
+   * @param Partial<Indirizzo> payload con dati da modificare 
+   * @returns Observable<IRispostaServer>
+   */
+  public putIndirizzi(idIndirizzo: number, indirizzo: Partial<Indirizzo>): Observable<IRispostaServer> {
+    return this.httpGenerica(['indirizzi', idIndirizzo], "PUT", indirizzo)
+  }
+
+  /**
+   * Api per eliminare gli indirizzi
+   * @param idIndirizzo number
+   * @returns Observable<IRispostaServer>
+   */
+  public deleteIndirizzi(idIndirizzo: number): Observable<IRispostaServer> {
+    return this.httpGenerica(['indirizzi', idIndirizzo], "DELETE")
+  }
+
+  /**
+   * Api per caricare i recapiti
+   * @param id number
+   * @param tipologiaUtente per la ricerca secondo la tipologia o l'utente
+   * @returns Observable<IRispostaServer>
+   */
+  public getRecapiti(id: number | null, tipologiaUtente: 'tipologia' | 'utente' | null = null): Observable<IRispostaServer> {
+    if (typeof id === 'number') {
+      if (tipologiaUtente == null) {
+        return this.httpGenerica(["recapiti", id], "GET")
+      } else return this.httpGenerica(["recapiti", tipologiaUtente, id], "GET")
     } else {
       return this.httpGenerica(["recapiti"], "GET")
     }
   }
 
   /**
-   * Api per caricare gli indirizzi
-   * @param indirizzo number come id di un indirizzo
-   * @param tipologiaUtente per la ricerca secondo la tipologia o l'utente
+     * Api per creare i recapiti
+     * @param Partial<Recapito> payload con dati 
+     * @returns Observable<IRispostaServer>
+     */
+  public postRecapiti(recapito: Partial<Recapito>): Observable<IRispostaServer> {
+    return this.httpGenerica(['recapiti'], "POST", recapito)
+  }
+
+  /**
+   * Api per modificare i recapiti
+   * @param idRecapito number
+   * @param Partial<Recapito> payload con dati da modificare 
    * @returns Observable<IRispostaServer>
    */
-  public getIndirizzi(indirizzo: number | null, tipologiaUtente: 'tipologia' | 'utente' | null = null): Observable<IRispostaServer> {
-    if (typeof indirizzo === 'number') {
-      if (tipologiaUtente == null) {
-        return this.httpGenerica(["indirizzi", indirizzo], "GET")
-      } else return this.httpGenerica(["indirizzi", tipologiaUtente, indirizzo], "GET")
-    } else {
-      return this.httpGenerica(["indirizzi"], "GET")
-    }
+  public putRecapiti(idRecapito: number, recapito: Partial<Recapito>): Observable<IRispostaServer> {
+    return this.httpGenerica(['recapiti', idRecapito], "PUT", recapito)
+  }
+
+  /**
+   * Api per eliminare i recapiti
+   * @param idRecapito number
+   * @returns Observable<IRispostaServer>
+   */
+  public deleteRecapiti(idRecapito: number): Observable<IRispostaServer> {
+    return this.httpGenerica(['recapiti', idRecapito], "DELETE")
   }
 
   /**
@@ -200,5 +357,19 @@ export class ApiService {
    */
   public getTipologieRecapito(): Observable<IRispostaServer> {
     return this.httpGenerica(["tipologieRecapito"], "GET")
+  }
+
+
+  /**
+   * Api per caricare i comuni
+   * @param comune stringa per la ricerca di un comune
+   * @returns Observable<IRispostaServer>
+   */
+  public getComuni(comune: string | null): Observable<IRispostaServer> {
+    if (comune) {
+      return this.httpGenerica(["comuni?", comune], "GET")
+    } else {
+      return this.httpGenerica(["comuni"], "GET")
+    }
   }
 }

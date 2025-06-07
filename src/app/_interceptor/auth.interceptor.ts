@@ -20,7 +20,7 @@ export class AuthIntercept implements HttpInterceptor {
         let richiestaModificata = req.clone({
             headers: new HttpHeaders().set("Language","IT")
         });
-        this.token = this.auth.leggiAuthLocalStorage().token
+        this.token = this.auth.ritornaAuth().token
         //console.log("Interceptor");
         if (this.token !== null) {
             richiestaModificata = richiestaModificata.clone({

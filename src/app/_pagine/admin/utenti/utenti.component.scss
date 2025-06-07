@@ -1,0 +1,60 @@
+@import "../../../../variabili.scss";
+
+a {
+    color: $secondaryColor;
+}
+td, th, tr, p {
+    color: $lightColor;
+    text-align: center;
+    padding-inline: 3px;
+}
+.riga {
+    border: solid 2px $primaryColor;
+}
+thead {
+    font-weight: bolder;
+}
+
+.attivo {
+    color: $lightColor;
+    background-color: $primaryColor;
+}
+.form-check-label, h5 {
+    color: $lightColor;
+}
+#dropPermesso {
+    color: $lightColor;
+    background-color: $tertiaryColor;
+}
+#dropStato {
+    color: $darkColor;
+    background-color: $secondaryColor;
+}
+
+.dropdown-item {
+    color: $darkColor;
+    cursor: pointer;
+
+    &:hover {
+        color: $lightColor;
+        background-color: $secondaryColor;
+    }
+}
+
+button.registra {
+    font-weight: bolder;
+    color: $darkColor;
+    background-color: $secondaryColor;
+}
+
+button.accedi {
+    font-weight: bolder;
+    color: $lightColor;
+    background-color: $tertiaryColor;
+}
+
+button.elimina {
+    font-weight: bolder;
+    color: $lightColor;
+    background-color: darkred;
+}

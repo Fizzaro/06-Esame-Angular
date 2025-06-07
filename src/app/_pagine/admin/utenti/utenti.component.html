@@ -1,0 +1,266 @@
+<div class="d-flex col-12 py-5">
+    <ul class="nav col-12 nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link {{active}}" href="javascript:void(0)" (click)="scheda='utenti'">Tutti gli utenti</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)" (click)="schedaPermessi()">Filtrati per Permesso</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)" (click)="schedaStati()">Filtrati per Stato</a>
+        </li>
+    </ul>
+</div>
+
+<!-- Scheda di tutti gli utenti -->
+<div class="col-11 m-auto py-3" *ngIf="scheda=='utenti'">
+    <h5>Cerca per Codice Fiscale</h5>
+    <form [formGroup]="control">
+        <input class="form-control" type="text" formControlName="ricerca" (input)="apiUtenti()">
+    </form>
+    <div class="col-12 mt-5 overflow-x-scroll">
+        <table class="col-12">
+            <thead>
+                <tr>
+                    <td>Cambia Stato</td>
+                    <td>Cambia Permesso</td>
+                    <td></td>
+                    <td>Nome e cognome</td>
+                    <td>Codice Fiscale</td>
+                    <td>Email</td>
+                </tr>
+            </thead>
+            <tr class="riga" *ngFor="let user of users">
+                <td>
+                    <div class="z-3">
+                        <button class="btn dropdown-toggle" id="dropStato" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <ng-container *ngIf="user.idStato==1">Inattivo</ng-container>
+                            <ng-container *ngIf="user.idStato==2">Attivo</ng-container>
+                            <ng-container *ngIf="user.idStato==3">Sospeso</ng-container>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" (click)="cambiaStato(user, 1, 'disattiva')">Inattivo</a>
+                            </li>
+                            <li><a class="dropdown-item" (click)="cambiaStato(user, 2, 'attiva')">Attivo</a></li>
+                            <li><a class="dropdown-item" (click)="cambiaStato(user, 3, 'sospendi')">Sospeso</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div class="z-3">
+                        <button class="btn dropdown-toggle" id="dropPermesso" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <ng-container *ngIf="user.idPermesso==2">Membro</ng-container>
+                            <ng-container *ngIf="user.idPermesso==1">Amministratore</ng-container>
+                            <ng-container *ngIf="user.idPermesso==3">Ospite</ng-container>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item"
+                                    (click)="cambiaPermesso(user, 1, 'amministratore')">Amministratore</a></li>
+                            <li><a class="dropdown-item" (click)="cambiaPermesso(user, 2, 'membro')">Membro</a>
+                            </li>
+                            <li><a class="dropdown-item" (click)="cambiaPermesso(user, 3, 'ospite')">Ospite</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+                <td><button class="btn elimina" type="button" (click)="eliminaUtente(user.idUtente)"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-trash" viewBox="0 0 16 16">
+                            <path
+                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                            <path
+                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                        </svg></button>
+                </td>
+                <td>{{user.nome}} {{user.cognome}}</td>
+                <td>{{user.codFiscale}}</td>
+                <td *ngIf="users">{{recFilter(user.idUtente)?.recapito}}</td>
+            </tr>
+        </table>
+
+    </div>
+
+</div>
+
+<!-- Scheda degli utenti filtrati per il permesso -->
+<div class="col-11 m-auto py-3" *ngIf="scheda=='permessi'">
+    <h5>Seleziona il tipo di Permesso</h5>
+    <div class="d-flex pb-3 border-bottom border-white">
+        <div class="form-check me-3">
+            <input class="form-check-input" type="radio" name="permesso" (click)="apiPermessi(1)">
+            <label class="form-check-label" for="permesso">
+                Amministratore
+            </label>
+        </div>
+        <div class="form-check me-3">
+            <input class="form-check-input" type="radio" name="permesso" (click)="apiPermessi(2)">
+            <label class="form-check-label" for="permesso">
+                Membro
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="permesso" (click)="apiPermessi(3)">
+            <label class="form-check-label" for="permesso">
+                Ospite
+            </label>
+        </div>
+    </div>
+    <div class="col-12 mt-5 overflow-x-scroll">
+        <table class="col-12">
+            <thead>
+                <tr>
+                    <td>Cambia Permesso</td>
+                    <td>Cambia Stato</td>
+                    <td></td>
+                    <td>Nome e cognome</td>
+                    <td>Codice Fiscale</td>
+                    <td>Email</td>
+                </tr>
+            </thead>
+            <tr class="riga" *ngFor="let user of usersPermessi">
+                <td>
+                    <div class="z-3">
+                        <button class="btn dropdown-toggle" id="dropPermesso" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <ng-container *ngIf="user.idPermesso==2">Membro</ng-container>
+                            <ng-container *ngIf="user.idPermesso==1">Amministratore</ng-container>
+                            <ng-container *ngIf="user.idPermesso==3">Ospite</ng-container>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item"
+                                    (click)="cambiaPermesso(user, 1, 'amministratore')">Amministratore</a></li>
+                            <li><a class="dropdown-item" (click)="cambiaPermesso(user, 2, 'membro')">Membro</a>
+                            </li>
+                            <li><a class="dropdown-item" (click)="cambiaPermesso(user, 3, 'ospite')">Ospite</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div class="z-3">
+                        <button class="btn dropdown-toggle" id="dropStato" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <ng-container *ngIf="user.idStato==1">Inattivo</ng-container>
+                            <ng-container *ngIf="user.idStato==2">Attivo</ng-container>
+                            <ng-container *ngIf="user.idStato==3">Sospeso</ng-container>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" (click)="cambiaStato(user, 1, 'disattiva')">Inattivo</a>
+                            </li>
+                            <li><a class="dropdown-item" (click)="cambiaStato(user, 2, 'attiva')">Attivo</a></li>
+                            <li><a class="dropdown-item" (click)="cambiaStato(user, 3, 'sospendi')">Sospeso</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+                <td><button class="btn elimina" type="button" (click)="eliminaUtente(user.idUtente)"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-trash" viewBox="0 0 16 16">
+                            <path
+                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                            <path
+                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                        </svg></button>
+                </td>
+                <td>{{user.nome}} {{user.cognome}}</td>
+                <td>{{user.codFiscale}}</td>
+                <td *ngIf="recFilter(user.idUtente)">{{recFilter(user.idUtente)?.recapito}}</td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+<!-- Scheda degli utenti filtrati per lo stato -->
+<div class="col-11 m-auto py-3" *ngIf="scheda=='stati'">
+    <div class="dropdown mb-3">
+        <h5>Seleziona lo Stato</h5>
+        <div class="d-flex pb-3 border-bottom border-white">
+            <div class="form-check me-3">
+                <input class="form-check-input" type="radio" name="stato" (click)="apiStati(1)">
+                <label class="form-check-label" for="stato">
+                    Inattivo
+                </label>
+            </div>
+            <div class="form-check me-3">
+                <input class="form-check-input" type="radio" name="stato" (click)="apiStati(2)">
+                <label class="form-check-label" for="stato">
+                    Attivo
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="stato" (click)="apiStati(3)">
+                <label class="form-check-label" for="stato">
+                    Sospeso
+                </label>
+            </div>
+        </div>
+        <div class="col-12 mb-5 border-bottom border-white"></div>
+    </div>
+    <div class="col-12 mt-5 overflow-x-scroll">
+        <table class="col-12">
+            <thead>
+                <tr>
+                    <td>Cambia Stato</td>
+                    <td>Cambia Permesso</td>
+                    <td></td>
+                    <td>Nome e cognome</td>
+                    <td>Codice Fiscale</td>
+                    <td>Email</td>
+                </tr>
+            </thead>
+            <tr class="riga" *ngFor="let user of usersStati">
+                <td>
+                    <div class="z-3">
+                        <button class="btn dropdown-toggle" id="dropStato" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <ng-container *ngIf="user.idStato==1">Inattivo</ng-container>
+                            <ng-container *ngIf="user.idStato==2">Attivo</ng-container>
+                            <ng-container *ngIf="user.idStato==3">Sospeso</ng-container>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" (click)="cambiaStato(user, 1, 'disattiva')">Inattivo</a>
+                            </li>
+                            <li><a class="dropdown-item" (click)="cambiaStato(user, 2, 'attiva')">Attivo</a></li>
+                            <li><a class="dropdown-item" (click)="cambiaStato(user, 3, 'sospendi')">Sospeso</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div class="z-3">
+                        <button class="btn dropdown-toggle" id="dropPermesso" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <ng-container *ngIf="user.idPermesso==2">Membro</ng-container>
+                            <ng-container *ngIf="user.idPermesso==1">Amministratore</ng-container>
+                            <ng-container *ngIf="user.idPermesso==3">Ospite</ng-container>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item"
+                                    (click)="cambiaPermesso(user, 1, 'amministratore')">Amministratore</a></li>
+                            <li><a class="dropdown-item" (click)="cambiaPermesso(user, 2, 'membro')">Membro</a>
+                            </li>
+                            <li><a class="dropdown-item" (click)="cambiaPermesso(user, 3, 'ospite')">Ospite</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+                <td><button class="btn elimina" type="button" (click)="eliminaUtente(user.idUtente)"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-trash" viewBox="0 0 16 16">
+                            <path
+                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                            <path
+                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                        </svg></button>
+                </td>
+                <td>{{user.nome}} {{user.cognome}}</td>
+                <td>{{user.codFiscale}}</td>
+                <td *ngIf="usersStati">{{recFilter(user.idUtente)?.recapito}}</td>
+            </tr>
+        </table>
+    </div>
+</div>

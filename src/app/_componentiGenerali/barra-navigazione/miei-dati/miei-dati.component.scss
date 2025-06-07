@@ -1,0 +1,25 @@
+@import '../../../../variabili.scss';
+
+.modal-content {
+    background-color: $primaryColor;
+    border-left: 10px solid $secondaryColor;
+    border-right: 10px solid $secondaryColor;
+    border-radius: 0px;
+}
+
+.list-group-item {
+    color: $tertiaryColor;
+    background-color: $primaryColor;
+    border: none;
+}
+
+h3 {
+    color: $darkColor;
+}
+
+button.elimina {
+    margin: auto;
+    font-weight: bolder;
+    color: $lightColor;
+    background-color: darkred;
+}

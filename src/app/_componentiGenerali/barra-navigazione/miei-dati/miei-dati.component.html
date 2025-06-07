@@ -1,0 +1,58 @@
+<!-- Modal -->
+
+<div [config]="{backdrop: 'static'}" [config]="{ show: true }" (onHidden)="onHidden()" bsModal
+  #autoShownModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-auto-name">
+
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header text-center w-100">
+        <h4 id="dialog-static-name" class="modal-title m-auto">I miei dati</h4>
+      </div>
+      <div class="modal-body">
+
+        <ng-container *ngIf="utenteAuth">
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">Nome e cognome</div>
+                {{utenteAuth.nomeCompleto}}
+              </div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">Luogo e data di nascita</div>
+                {{utente.comuneNascita}}, {{utente.dataNascita}}
+              </div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">Codice fiscale</div>
+                {{utente.codFiscale}}
+              </div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">Abbonamento</div>
+                {{((utenteAuth.amministratore) ? 'Amministratore' : null)}} {{((utenteAuth.membro) ? 'Membro' : null)}}
+                - {{((utenteAuth.attivo==true) ? 'Attivo' : 'Non attivo')}}
+              </div>
+            </li>
+          </ul>
+        </ng-container>
+
+        <ng-container *ngIf="!utenteAuth">
+          <div class="spinner-border text-warning" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </ng-container>
+
+      </div>
+      <div class="modal-footer">
+        <div class="row w-100">
+          <button type="button" class="btn elimina fs-5 m-auto" data-bs-dismiss="modal"
+            routerLink="/home">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

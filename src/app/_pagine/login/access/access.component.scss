@@ -21,6 +21,12 @@ input.ng-touched.ng-invalid {
    
 }
 
+.form-check-label {
+    text-decoration: underline;
+}
+.form-check-input {
+    border: solid 3px $tertiaryColor
+}
 button.registra {
     font-weight: bolder;
     color: $darkColor;

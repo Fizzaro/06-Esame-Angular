@@ -17,18 +17,16 @@ import { Auth } from 'src/app/type/auth.type';
 export class AccessComponent {
 
   reactiveLogin!: FormGroup
-  auth$: BehaviorSubject<Auth>
-  erroreLogin:string = ''
+  auth$!: BehaviorSubject<Auth>
+  erroreLogin: string = ''
   private distruggi$ = new Subject<void>
-  loggato: boolean = false
+  spinner: boolean = false
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private api: ApiService,
     private router: Router) {
-
-    this.auth$ = this.authService.getSubAuth()
 
   }
 
@@ -48,16 +46,24 @@ export class AccessComponent {
     this.isModalShown = false;
   }
 
-  username: string = ''
-  shaUser: string = ''
-  password: string = ''
-  shaPssw: string = ''
-
   ngOnInit() {
+
+    this.auth$ = this.authService.getSubAuth()
+    this.auth$.pipe(
+      takeUntil(this.distruggi$)
+    ).subscribe({
+      next: auth => {
+        if (auth.scadenza !== null && auth.scadenza < (Date.now() / 1000)) {
+          location.reload()
+        }
+      }
+    })
+
     //Form di login
     this.reactiveLogin = this.fb.group({
       'user': new FormControl('', [Validators.required, Validators.maxLength(40)]),
-      'password': new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/)])
+      'password': new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/)]),
+      'collegato': new FormControl('')
     })
 
   }
@@ -75,6 +81,7 @@ export class AccessComponent {
   }
 
   private leggiObs(username: string, password: string): Observable<IRispostaServer> {
+    this.spinner = true
     return this.api.login(username, password).pipe(
       take(1),
       //creo e ritorno un observable in caso di errore
@@ -98,33 +105,39 @@ export class AccessComponent {
           const payload = UtilityService.decifraToken(tk)
           const auth: Auth = {
             token: tk,
+            scadenza: payload.exp,
             idUtente: payload.data.idUtente,
-            stato: payload.data.stato,
-            permesso: payload.data.permesso,
-            azioni: payload.data.azioni,
+            attivo: (payload.data.stato == 'attivo') ? true : false,
+            amministratore: (payload.data.permesso == 'Amministratore') ? true : false,
+            membro: (payload.data.permesso == 'Membro') ? true : false,
             nomeCompleto: payload.data.nomeCompleto
           }
+          //console.log(new Date(payload.exp*1000))
+          if (this.reactiveLogin.controls['collegato'].value) {
+            this.authService.salvaAuthLocalStorage(auth)
+          } else this.authService.salvaAuthSessionStorage(auth)
           this.authService.setSubAuth(auth)
-          this.authService.salvaAuthLocalStorage(auth)
-          //console.log("AUTH",this.authService.leggiAuthLocalStorage())
+          this.spinner = false
           this.router.navigateByUrl('home')
         } else {
-          this.erroreLogin= 'ATTENZIONE: '+ rit.message
+          this.spinner = false
+          this.erroreLogin = 'ATTENZIONE: ' + rit.message
         }
       },
       error: (err) => {
         console.error("Errore observer", err)
         const auth = {
           token: null,
+          scadenza: null,
           idUtente: null,
-          stato: null,
-          permesso: null,
-          azioni: null,
+          attivo: null,
+          amministratore: null,
+          membro: null,
           nomeCompleto: null
         }
         this.authService.setSubAuth(auth)
       },
-      complete: () => console.log("Completato")
+      complete: () => null
     }
 
   }

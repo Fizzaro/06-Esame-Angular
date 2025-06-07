@@ -3,18 +3,26 @@ import { CommonModule } from '@angular/common';
 import { MultilistCarouselComponent } from './multilist-carousel/multilist-carousel.component';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { CardComponent } from './card/card.component';
-
-
+import { FirstCarouselComponent } from './first-carousel/first-carousel.component';
+import { UploadFileComponent } from './upload-file/upload-file.component';
+import { DragDropDirective } from 'src/app/_direttive/drag-drop.directive';
 
 @NgModule({
   declarations: [
     MultilistCarouselComponent,
-    CardComponent
+    CardComponent,
+    FirstCarouselComponent,
+    UploadFileComponent,
+    DragDropDirective
   ],
   imports: [
     CommonModule,
     CarouselModule
   ],
-  exports: [MultilistCarouselComponent]
+  exports: [MultilistCarouselComponent,
+    FirstCarouselComponent,
+    CardComponent,
+    UploadFileComponent
+  ]
 })
 export class UikitModule { }

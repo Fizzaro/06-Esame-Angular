@@ -7,23 +7,28 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class AuthService {
 
-  static auth:Auth
-  loggato: boolean =false
-  private authSub$:BehaviorSubject<Auth>
+  static auth: Auth
+  private authSub$: BehaviorSubject<Auth>
 
   constructor() {
-    AuthService.auth=this.leggiAuthLocalStorage()
-    this.authSub$=new BehaviorSubject<Auth>(AuthService.auth)
+    AuthService.auth = this.ritornaAuth()
+    this.authSub$ = new BehaviorSubject<Auth>(AuthService.auth)
   }
 
-  //Restituisce l'auth con un Subject
-  getSubAuth():BehaviorSubject<Auth> {
+  /**
+   * Funzione che restituisce l'auth col Subject
+   * @returns BehaviorSubject<Auth>
+   */
+  getSubAuth(): BehaviorSubject<Auth> {
     return this.authSub$
   }
 
-  //Gli passa i dati per settare l'auth da emettere col Subject
-  setSubAuth(dati:Auth):void {
-    AuthService.auth=dati
+  /**
+   * Funzione per settare l'auth da emettere col Subject
+   * @param dati Auth
+   */
+  setSubAuth(dati: Auth): void {
+    AuthService.auth = dati
     this.authSub$.next(dati)
   }
 
@@ -31,31 +36,65 @@ export class AuthService {
    * Funzione per salvare sul local storage l'auth
    * @param auth oggetto da convertire in stringa e salvare
    */
-  salvaAuthLocalStorage(auth:Auth):void {
+  salvaAuthLocalStorage(auth: Auth): void {
     localStorage.setItem("auth", JSON.stringify(auth))
   }
 
   /**
-   * Funzione per leggere dal local storage l'auth
-   * @returns object convertito da string
+   * Funzione per salvare sul session storage l'auth
+   * @param auth oggetto da convertire in stringa e salvare
    */
-  leggiAuthLocalStorage():Auth {
-    const tmp:string|null = localStorage.getItem("auth")
-    let auth:Auth
+  salvaAuthSessionStorage(auth: Auth): void {
+    sessionStorage.setItem("auth", JSON.stringify(auth))
+  }
+
+  /**
+   * Funzione per eliminare l'auth sia dal local che dal session storage
+   */
+  eliminaAuth() {
+    localStorage.removeItem('auth')
+    sessionStorage.removeItem('auth')
+  }
+
+  /**
+   * Funzione per leggere dal local storage l'auth
+   * @returns object convertito da string | null
+   */
+  leggiAuthLocalStorage(): Auth | null {
+    const tmp: string | null = localStorage.getItem("auth")
+    return (tmp !== null) ? JSON.parse(tmp) : null
+  }
+
+  /**
+   * Funzione per leggere dal session storage l'auth
+   * @returns object convertito da string | null
+   */
+  leggiAuthSessionStorage(): Auth | null {
+    const tmp: string | null = sessionStorage.getItem("auth");
+    return (tmp !== null) ? JSON.parse(tmp) : null
+  }
+
+  /**
+   * Funzione che ritorna l'auth
+   * @returns object Auth
+   */
+  ritornaAuth(): Auth {
+    let tmp = this.leggiAuthLocalStorage()
     if (tmp !== null) {
-      this.loggato=true
-      return auth=JSON.parse(tmp)
+      return tmp
     } else {
-      this.loggato=false
-      return auth= {
+      tmp = this.leggiAuthSessionStorage()
+      if (tmp !== null) {
+        return tmp
+      } else return {
         token: null,
+        scadenza: null,
         idUtente: null,
-        stato: null,
-        permesso: null,
-        azioni: null,
+        attivo: null,
+        amministratore: null,
+        membro: null,
         nomeCompleto: null
       }
     }
   }
-
 }

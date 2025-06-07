@@ -1,33 +1,16 @@
 <div class="p-0 m-0">
-    <carousel [(activeSlide)]="activeSlideIndex" >
-        <slide *ngFor="let slide of slides; let index=index">
-          <img src="" [src]="slide.image" alt="image slide" style="display: block; width: 100%;">
-       
-          <div class="carousel-caption">
-            <h4>Slide {{index}}</h4>
-            <p>{{slide.text}}</p>
-          </div>
-        </slide>
-      </carousel>
-      <br/>
-      <div>
-        <button type="button" class="btn btn-info"
-                (click)="addSlide()">Add Slide
-        </button>
-        <button type="button" class="btn btn-info"
-                (click)="removeSlide()">Remove Current
-        </button>
-        <button type="button" class="btn btn-info"
-                (click)="removeSlide(2)">Remove #3
-        </button>
-      </div>
+  <first-carousel></first-carousel>
 </div>
-<!-- <div>{{auth$ | async | json}}<div> -->
-<div><h3>Film</h3></div>
+
+<div><a routerLink="/film">
+    <h3>Film</h3>
+  </a></div>
 <div id="carousel-content">
   <multilist-carousel dati=""></multilist-carousel>
 </div>
-<div><h3>Serie tv</h3></div>
+<div><a routerLink="/serie">
+    <h3>Serie tv</h3>
+  </a></div>
 <div id="carousel-content">
   <multilist-carousel></multilist-carousel>
 </div>
