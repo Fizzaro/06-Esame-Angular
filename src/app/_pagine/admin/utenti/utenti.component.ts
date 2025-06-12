@@ -35,9 +35,6 @@ export class UtentiComponent {
     } else return null
   }
 
-  // schedaUtenti() {
-  //   this.scheda = 'utenti'
-  // }
   schedaPermessi() {
     this.scheda = 'permessi'
     this.active = null
@@ -47,16 +44,16 @@ export class UtentiComponent {
     this.active = null
   }
 
-  apiUtenti() {
+  leggiUtente() {
     const codice = this.control.controls['ricerca'].value
-    this.api.getUtente(null, null).subscribe(
-      x => {
-        this.users = x.data
-        if (codice) {
-          this.users = this.users.filter(x => x.codFiscale == codice)
-        }
-      })
-
+    if (codice) {
+      this.api.getUtente(codice, null).subscribe(
+        x => this.users = x.data)
+    } else {
+      this.api.getUtente(null, null).subscribe(
+        x => this.users = x.data
+      )
+    }
   }
   apiPermessi(permesso: number) {
     this.api.getUtente(permesso, "permesso").subscribe(
@@ -95,7 +92,7 @@ export class UtentiComponent {
       ricerca: new FormControl('')
     });
 
-    this.apiUtenti()
+    this.leggiUtente()
 
     this.api.getRecapiti(3, "tipologia").subscribe(
       x => this.email = x.data)

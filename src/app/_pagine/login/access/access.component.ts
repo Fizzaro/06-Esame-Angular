@@ -80,6 +80,21 @@ export class AccessComponent {
       .subscribe(this.osservoObs())
   }
 
+  logout() {
+    this.authService.eliminaAuth()
+    const authVuoto: Auth = {
+      token: null,
+      scadenza: null,
+      idUtente: null,
+      attivo: null,
+      amministratore: null,
+      membro: null,
+      nomeCompleto: null
+    }
+    this.authService.setSubAuth(authVuoto)
+    this.router.navigateByUrl('login')
+  }
+  
   private leggiObs(username: string, password: string): Observable<IRispostaServer> {
     this.spinner = true
     return this.api.login(username, password).pipe(

@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { BehaviorSubject, map, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { BehaviorSubject, map, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { ApiService } from 'src/app/_servizi/api.service';
 import { AuthService } from 'src/app/_servizi/auth.service';
 import { Auth } from 'src/app/type/auth.type';

@@ -1,24 +1,18 @@
-import { inject, NgModule } from '@angular/core';
-import { CanActivateFn, RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 import { UtentiComponent } from './utenti/utenti.component';
 import { FilmCatalogoComponent } from './film-catalogo/film-catalogo.component';
 import { SerieCatalogoComponent } from './serie-catalogo/serie-catalogo.component';
-import { AuthService } from 'src/app/_servizi/auth.service';
-
-const authGuardFn: CanActivateFn = () => {
-  const authService = inject(AuthService);
-  let result = false
-  authService.getSubAuth().subscribe(x => {
-    (x.attivo && x.amministratore) ? result= true : null }
-  )
-  return result
-}
+import { CategorieVideoComponent } from './categorie-video/categorie-video.component';
+import { EpisodiCatalogoComponent } from './episodi-catalogo/episodi-catalogo.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'utenti', pathMatch: 'full' },
-  { path: 'utenti', component: UtentiComponent, canActivate:[authGuardFn] },
-  { path: 'film', component: FilmCatalogoComponent, canActivate:[authGuardFn] },
-  { path: 'serie', component: SerieCatalogoComponent, canActivate:[authGuardFn] }
+  { path: 'utenti', component: UtentiComponent },
+  { path: 'film', component: FilmCatalogoComponent },
+  { path: 'serie', component: SerieCatalogoComponent },
+  { path: 'categorie', component: CategorieVideoComponent },
+  { path: 'episodi', component: EpisodiCatalogoComponent }
 ];
 
 @NgModule({

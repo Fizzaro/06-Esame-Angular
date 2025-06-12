@@ -1,88 +1,48 @@
 <div class="d-flex col-12 py-5">
     <ul class="nav col-12 nav-tabs">
         <li class="nav-item">
-            <a class="nav-link {{active}}" href="javascript:void(0)" (click)="scheda='serie'">Tutti le Serie</a>
+            <a class="nav-link {{active}}" href="javascript:void(0)" (click)="schedaSerie()">Tutti le Serie</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="javascript:void(0)" (click)="schedaCategoria()">Filtrati per Categoria</a>
+            <a class="nav-link" href="javascript:void(0)" (click)="schedaSerieCategoria()">Filtrate per categoria</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="javascript:void(0)" (click)="schedaSerieNuova()">Inserisci nuova Serie</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="javascript:void(0)" (click)="schedaEpisodioNuovo()">Inserisci nuovo Episodio</a>
         </li>
     </ul>
 </div>
 
 <!-- Scheda tutte le serie -->
-<div class="col-11 m-auto my-1" *ngIf="scheda=='serie'">
-
-</div>
-
-<!-- Scheda per categoria -->
-<div class="col-11 m-auto my-1" *ngIf="scheda=='categoria'">
-
-    <div class="col-12">
-        <legend class="m-0 fw-bold">Categorie</legend>
-                <form [formGroup]="selectForm">
-                    <div class="d-flex w-100 flex-nowrap">
-                        <div class="d-flex flex-fill">
-                            <label for="categoria">Scegli categoria</label>
-                        </div>
-                        <div class="d-flex flex-fill">
-                            <select class="form-select" id="categoria" name="categoria" formControlName="categoria"
-                            (change)="modificaCategoria(generaIdCategoria(selectForm.controls['categoria'].value))">
-                                <option *ngFor="let categoria of categorie" [value]="categoria.categoria">{{categoria.categoria}}
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                </form>
-    </div>
-
-    <!-- Form per l'inserimento di una categoria, nuova, modificata o da eliminare -->
-    <div class="col-12 d-flex my-4">
-        <div class="col-12" *ngIf="categoriaTable!==null">
-            <form class="row justify-content-center" [formGroup]="categoriaForm" (ngSubmit)="formCategoria()">
-                <fieldset class="mt-5">
-                    <legend class="m-0 fw-bold">{{categoriaTable}} categoria</legend>
-                    <div class="row py-2">
-                        <div class="col-12 col-lg-4 d-flex align-items-center">
-                            <label class="form-label my-auto" for="categoria" id="lbcategoria" [ngClass]="{'noValid': categoriaForm.controls['categoria'].touched &&
-                                          categoriaForm.controls['categoria'].errors}">Categoria</label>
-                        </div>
-                        <div class="col-12 col-lg-8">
-                            <input class="form-control" type="text" id="categoria" name="categoria"
-                                formControlName="categoria" [value]="selectForm.controls['categoria'].value">
-                        </div>
-                    </div>
-                </fieldset>
-                <div class="d-flex w-100 flex-row mt-3">
-                    <div class="px-2">
-                        <!-- Aggiungi -->
-                        <button class="btn registra" type="button" (click)="apriCategoria()"><svg
-                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-plus-circle" viewBox="0 0 16 16">
-                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                                <path
-                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-                            </svg></button>
-                    </div>
-                    <div class="px-2">
+<div class="col-11 mx-auto my-1 pb-5 text-center" *ngIf="scheda=='serie'">
+    <h5 class="text-white">Cerca per Titolo</h5>
+    <form [formGroup]="control" class="col-12 col-lg-10 col-xxl-8 mx-auto">
+        <input class="form-control" type="text" formControlName="ricerca" (input)="apiSerie()">
+    </form>
+    <div class="col-12 col-lg-10 col-xxl-8 mt-5 mx-auto d-flex tabella">
+        <table class="col-12 text-center">
+            <thead>
+                <tr>
+                    <td>Modifica</td>
+                    <td>Elimina</td>
+                    <td>Titolo</td>
+                    <td>Uscita</td>
+                    <td>Stagioni</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let serie of series" class="border border-light">
+                    <td class="px-2">
                         <!-- Modifica -->
-                        <button class="btn registra" type="button"
-                            (click)="modificaCategoria(categoriaForm.controls['categoria'].value)"><svg
+                        <button class="btn registra" type="button" (click)="cambiaSerie('Modifica', serie)"><svg
                                 xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-pencil-fill" viewBox="0 0 16 16">
                                 <path
                                     d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z" />
                             </svg></button>
-                    </div>
-                    <div class="px-2">
+                    </td>
+                    <td class="px-2">
                         <!-- Elimina -->
-                        <button class="btn elimina" type="button"
-                            (click)="eliminaCategoria(categoriaForm.controls['categoria'].value)"><svg
+                        <button class="btn elimina" type="button" (click)="cambiaSerie('Elimina', serie)"><svg
                                 xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-trash" viewBox="0 0 16 16">
                                 <path
@@ -90,33 +50,344 @@
                                 <path
                                     d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
                             </svg></button>
+                    </td>
+                    <td class="px-2">
+                        <p>{{serie.titolo}}</p>
+                    </td>
+                    <td class="px-2">
+                        <p>{{serie.annoUscita}}</p>
+                    </td>
+                    <td class="px-2">
+                        <p>{{serie.totStagioni}}</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-12 col-lg-10 col-xxl-8 mx-auto" *ngIf="serieTable!==null">
+        <form class="row justify-content-center" [formGroup]="modificaForm" (ngSubmit)="formSerie()">
+            <div class="col-12 px-3 bgForm">
+                <fieldset class="mt-3">
+                    <legend class="m-0 fw-bold">Dati serie</legend>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-4 d-flex align-items-center">
+                            <label class="form-label my-auto" for="titolo" id="lbtitolo" [ngClass]="{'noValid': modificaForm.controls['titolo'].touched &&
+                            modificaForm.controls['titolo'].errors}">Titolo</label>
+                        </div>
+                        <div class="col-12 col-lg-8">
+                            <input class="form-control" type="text" id="titolo" name="titolo"
+                                formControlName="titolo">
+                        </div>
                     </div>
-                    <div class="d-flex col ms-auto">
-                        <ng-container *ngIf="categoriaTable=='Nuova'">
-                            <button class="btn elimina me-0" type="button"
-                                [disabled]="!categoriaForm.valid">{{categoriaTable}}
-                                categoria</button>
-                        </ng-container>
-                        <ng-container *ngIf="categoriaTable=='Modifica'">
-                            <button class="btn accedi me-0" type="button"
-                                [disabled]="!categoriaForm.valid">{{categoriaTable}}
-                                categoria</button>
-                        </ng-container>
-                        <ng-container *ngIf="categoriaTable=='Elimina'">
-                            <button class="btn accedi me-0" type="button"
-                                [disabled]="!categoriaForm.hasError">{{categoriaTable}}
-                                categoria</button>
-                        </ng-container>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-4 d-flex align-items-center">
+                            <label class="form-label my-auto" for="descrizione" id="lbdescrizione"
+                                [ngClass]="{'noValid': modificaForm.controls['descrizione'].touched &&
+                            modificaForm.controls['descrizione'].errors}">Descrizione</label>
+                        </div>
+                        <div class="col-12 col-lg-8">
+                            <textarea class="form-control" type="text" id="descrizione" name="descrizione"
+                                formControlName="descrizione"></textarea>
+                        </div>
                     </div>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-4 d-flex align-items-center">
+                            <label class="form-label my-auto" for="regista" id="lbregista" [ngClass]="{'noValid': modificaForm.controls['regista'].touched &&
+                            modificaForm.controls['regista'].errors}">Regista</label>
+                        </div>
+                        <div class="col-12 col-lg-8">
+                            <input class="form-control" type="text" id="regista" name="regista"
+                                formControlName="regista">
+                        </div>
+                    </div>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-4 d-flex align-items-center">
+                            <label class="form-label my-auto" for="produttore" id="lbproduttore" [ngClass]="{'noValid': modificaForm.controls['produttore'].touched &&
+                            modificaForm.controls['produttore'].errors}">Produttore</label>
+                        </div>
+                        <div class="col-12 col-lg-8">
+                            <input class="form-control" type="text" id="produttore" name="produttore"
+                                formControlName="produttore">
+                        </div>
+                    </div>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-4 d-flex align-items-center">
+                            <label class="form-label my-auto" for="attori" id="lbattori" [ngClass]="{'noValid': modificaForm.controls['attori'].touched &&
+                            modificaForm.controls['attori'].errors}">Attori</label>
+                        </div>
+                        <div class="col-12 col-lg-8">
+                            <input class="form-control" type="text" id="attori" name="attori"
+                                formControlName="attori">
+                        </div>
+                    </div>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-4 d-flex align-items-center">
+                            <label class="form-label my-auto" for="categoria" id="lbcategoria" [ngClass]="{'noValid': modificaForm.controls['categoria'].touched &&
+                            modificaForm.controls['categoria'].errors}">Categoria</label>
+                        </div>
+                        <div class="col-12 col-lg-8">
+                            <select class="form-select" id="categoria" name="categoria"
+                                formControlName="categoria">
+                                <option *ngFor="let categoria of categorie" [value]="categoria.idCategoria">
+                                    {{categoria.categoria}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-5 d-flex align-items-center">
+                            <label class="form-label my-auto" for="dataUscita" id="lbdataUscita" [ngClass]="{'noValid': modificaForm.controls['dataUscita'].touched &&
+                            modificaForm.controls['dataUscita'].errors}">Data di uscita</label>
+                        </div>
+                        <div class="col-12 col-lg-7">
+                            <input class="form-control" type="date" name="dataUscita" id="dataUscita"
+                                formControlName="dataUscita">
+                        </div>
+                    </div>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-5 d-flex align-items-center">
+                            <label class="form-label my-auto" for="dataFine" id="lbdataFine" [ngClass]="{'noValid': modificaForm.controls['dataFine'].touched &&
+                            modificaForm.controls['dataFine'].errors}">Data di termine</label>
+                        </div>
+                        <div class="col-12 col-lg-7">
+                            <input class="form-control" type="date" name="dataFine" id="dataFine"
+                                formControlName="dataFine">
+                        </div>
+                    </div>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-5 d-flex align-items-center">
+                            <label class="form-label my-auto" for="totStagioni" id="lbtotStagioni"
+                                [ngClass]="{'noValid': modificaForm.controls['totStagioni'].touched &&
+                            modificaForm.controls['totStagioni'].errors}">Numero di stagioni</label>
+                        </div>
+                        <div class="col-12 col-lg-7">
+                            <input class="form-control" type="number" name="totStagioni" id="totStagioni"
+                                formControlName="totStagioni">
+                        </div>
+                    </div>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-5 d-flex align-items-center">
+                            <label class="form-label my-auto" for="totEpisodi" id="lbtotEpisodi" [ngClass]="{'noValid': modificaForm.controls['totEpisodi'].touched &&
+                            modificaForm.controls['totEpisodi'].errors}">Numero di Episodi</label>
+                        </div>
+                        <div class="col-12 col-lg-7">
+                            <input class="form-control" type="number" name="totEpisodi" id="totEpisodi"
+                                formControlName="totEpisodi">
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-12 px-3 bgForm" *ngIf="serieTable!=='Elimina'">
+                <fieldset class="mt-3">
+                    <legend class="m-0 fw-bold">Carica i file</legend>
+                    <div class="row py-2">
+                        <upload-file (files)="caricaFiles($event)"></upload-file>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-12 m-4 align-content-center">
+                <div class="d-grid gap-2">
+                    <button class="btn registra" type="submit" id="formSub">{{serieTable}} serie</button>
                 </div>
-            </form>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Scheda serie per categoria -->
+<div class="col-11 mx-auto my-1 pb-5 text-center" *ngIf="scheda=='categoria'">
+    <h5>Seleziona la categoria</h5>
+    <div class="col-12 col-lg-10 col-xxl-8 mx-auto">
+        <div class="d-flex pb-3 border-bottom border-white flex-wrap">
+            <div class="form-check me-3" *ngFor="let categoria of categorie">
+                <input class="form-check-input" type="radio" name="categoriaRadio" (click)="apiSerieCategoria(categoria.idCategoria)">
+                <label class="form-check-label" for="categoriaRadio">
+                    {{categoria.categoria}}
+                </label>
+            </div>
         </div>
+
+    </div>
+    <form [formGroup]="control" class="col-12 col-lg-10 col-xxl-8 mx-auto">
+        <input class="form-control" type="text" formControlName="ricerca" (input)="apiSerie()">
+    </form>
+    <div class="col-12 col-lg-10 col-xxl-8 mt-5 mx-auto d-flex tabella">
+        <table class="col-12 text-center">
+            <thead>
+                <tr>
+                    <td>Modifica</td>
+                    <td>Elimina</td>
+                    <td>Titolo</td>
+                    <td>Uscita</td>
+                    <td>Stagioni</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let serie of serieCategorie" class="border border-light">
+                    <td class="px-2">
+                        <!-- Modifica -->
+                        <button class="btn registra" type="button" (click)="cambiaSerie('Modifica', serie)"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z" />
+                            </svg></button>
+                    </td>
+                    <td class="px-2">
+                        <!-- Elimina -->
+                        <button class="btn elimina" type="button" (click)="cambiaSerie('Elimina', serie)"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-trash" viewBox="0 0 16 16">
+                                <path
+                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                <path
+                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                            </svg></button>
+                    </td>
+                    <td class="px-2">
+                        <p>{{serie.titolo}}</p>
+                    </td>
+                    <td class="px-2">
+                        <p>{{serie.annoUscita}}</p>
+                    </td>
+                    <td class="px-2">
+                        <p>{{serie.totStagioni}}</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-12 col-lg-10 col-xxl-8 mx-auto" *ngIf="serieTable!==null">
+        <form class="row justify-content-center" [formGroup]="modificaForm" (ngSubmit)="formSerie()">
+            <div class="col-12 px-3 bgForm">
+                <fieldset class="mt-3">
+                    <legend class="m-0 fw-bold">Dati serie</legend>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-4 d-flex align-items-center">
+                            <label class="form-label my-auto" for="titolo" id="lbtitolo" [ngClass]="{'noValid': modificaForm.controls['titolo'].touched &&
+                            modificaForm.controls['titolo'].errors}">Titolo</label>
+                        </div>
+                        <div class="col-12 col-lg-8">
+                            <input class="form-control" type="text" id="titolo" name="titolo"
+                                formControlName="titolo">
+                        </div>
+                    </div>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-4 d-flex align-items-center">
+                            <label class="form-label my-auto" for="descrizione" id="lbdescrizione"
+                                [ngClass]="{'noValid': modificaForm.controls['descrizione'].touched &&
+                            modificaForm.controls['descrizione'].errors}">Descrizione</label>
+                        </div>
+                        <div class="col-12 col-lg-8">
+                            <textarea class="form-control" type="text" id="descrizione" name="descrizione"
+                                formControlName="descrizione"></textarea>
+                        </div>
+                    </div>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-4 d-flex align-items-center">
+                            <label class="form-label my-auto" for="regista" id="lbregista" [ngClass]="{'noValid': modificaForm.controls['regista'].touched &&
+                            modificaForm.controls['regista'].errors}">Regista</label>
+                        </div>
+                        <div class="col-12 col-lg-8">
+                            <input class="form-control" type="text" id="regista" name="regista"
+                                formControlName="regista">
+                        </div>
+                    </div>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-4 d-flex align-items-center">
+                            <label class="form-label my-auto" for="produttore" id="lbproduttore" [ngClass]="{'noValid': modificaForm.controls['produttore'].touched &&
+                            modificaForm.controls['produttore'].errors}">Produttore</label>
+                        </div>
+                        <div class="col-12 col-lg-8">
+                            <input class="form-control" type="text" id="produttore" name="produttore"
+                                formControlName="produttore">
+                        </div>
+                    </div>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-4 d-flex align-items-center">
+                            <label class="form-label my-auto" for="attori" id="lbattori" [ngClass]="{'noValid': modificaForm.controls['attori'].touched &&
+                            modificaForm.controls['attori'].errors}">Attori</label>
+                        </div>
+                        <div class="col-12 col-lg-8">
+                            <input class="form-control" type="text" id="attori" name="attori"
+                                formControlName="attori">
+                        </div>
+                    </div>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-4 d-flex align-items-center">
+                            <label class="form-label my-auto" for="categoria" id="lbcategoria" [ngClass]="{'noValid': modificaForm.controls['categoria'].touched &&
+                            modificaForm.controls['categoria'].errors}">Categoria</label>
+                        </div>
+                        <div class="col-12 col-lg-8">
+                            <select class="form-select" id="categoria" name="categoria"
+                                formControlName="categoria">
+                                <option *ngFor="let categoria of categorie" [value]="categoria.idCategoria">
+                                    {{categoria.categoria}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-5 d-flex align-items-center">
+                            <label class="form-label my-auto" for="dataUscita" id="lbdataUscita" [ngClass]="{'noValid': modificaForm.controls['dataUscita'].touched &&
+                            modificaForm.controls['dataUscita'].errors}">Data di uscita</label>
+                        </div>
+                        <div class="col-12 col-lg-7">
+                            <input class="form-control" type="date" name="dataUscita" id="dataUscita"
+                                formControlName="dataUscita">
+                        </div>
+                    </div>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-5 d-flex align-items-center">
+                            <label class="form-label my-auto" for="dataFine" id="lbdataFine" [ngClass]="{'noValid': modificaForm.controls['dataFine'].touched &&
+                            modificaForm.controls['dataFine'].errors}">Data di termine</label>
+                        </div>
+                        <div class="col-12 col-lg-7">
+                            <input class="form-control" type="date" name="dataFine" id="dataFine"
+                                formControlName="dataFine">
+                        </div>
+                    </div>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-5 d-flex align-items-center">
+                            <label class="form-label my-auto" for="totStagioni" id="lbtotStagioni"
+                                [ngClass]="{'noValid': modificaForm.controls['totStagioni'].touched &&
+                            modificaForm.controls['totStagioni'].errors}">Numero di stagioni</label>
+                        </div>
+                        <div class="col-12 col-lg-7">
+                            <input class="form-control" type="number" name="totStagioni" id="totStagioni"
+                                formControlName="totStagioni">
+                        </div>
+                    </div>
+                    <div class="row py-2">
+                        <div class="col-12 col-lg-5 d-flex align-items-center">
+                            <label class="form-label my-auto" for="totEpisodi" id="lbtotEpisodi" [ngClass]="{'noValid': modificaForm.controls['totEpisodi'].touched &&
+                            modificaForm.controls['totEpisodi'].errors}">Numero di Episodi</label>
+                        </div>
+                        <div class="col-12 col-lg-7">
+                            <input class="form-control" type="number" name="totEpisodi" id="totEpisodi"
+                                formControlName="totEpisodi">
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-12 px-3 bgForm" *ngIf="serieTable!=='Elimina'">
+                <fieldset class="mt-3">
+                    <legend class="m-0 fw-bold">Carica i file</legend>
+                    <div class="row py-2">
+                        <upload-file (files)="caricaFiles($event)"></upload-file>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-12 m-4 align-content-center">
+                <div class="d-grid gap-2">
+                    <button class="btn registra" type="submit" id="formSub">{{serieTable}} serie</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
 <!-- Scheda nuova serie -->
 <div class="col-11 m-auto my-1" *ngIf="scheda=='nuovaSerie'">
-    <form class="row justify-content-center" [formGroup]="serieForm" (ngSubmit)="inviaForm()">
+    <form class="row justify-content-center" [formGroup]="serieForm" (ngSubmit)="nuovaSerie()" enctype="multipart/form-data">
         <div class="col-12 col-lg-6 px-3 bgForm">
             <fieldset class="mt-3">
                 <legend class="m-0 fw-bold">Dati serie</legend>
@@ -169,18 +440,16 @@
                 </div>
                 <div class="row py-2">
                     <div class="col-12 col-lg-4 d-flex align-items-center">
-                        <label class="form-label my-auto" for="categoria" id="lbcategoria" [ngClass]="{'noValid': serieForm.controls['categoria'].touched &&
-                                        serieForm.controls['categoria'].errors}">Categoria</label>
-                    </div>
-                    <div class="col-12 col-lg-8">
-                        <select class="form-select" id="categoria" name="categoria" formControlName="categoria"
-                            aria-label="Default select example">
-                            <option selected>Open this select menu</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                        </select>
-                    </div>
+                            <label class="form-label my-auto" for="categoria" id="lbcategoria" [ngClass]="{'noValid': serieForm.controls['categoria'].touched &&
+                            serieForm.controls['categoria'].errors}">Categoria</label>
+                        </div>
+                        <div class="col-12 col-lg-8">
+                            <select class="form-select" id="categoria" name="categoria"
+                                formControlName="categoria">
+                                <option *ngFor="let categoria of categorie" [value]="categoria.idCategoria">
+                                    {{categoria.categoria}}</option>
+                            </select>
+                        </div>
                 </div>
                 <div class="row py-2">
                     <div class="col-12 col-lg-5 d-flex align-items-center">
@@ -212,6 +481,16 @@
                             formControlName="totStagioni">
                     </div>
                 </div>
+                <div class="row py-2">
+                        <div class="col-12 col-lg-5 d-flex align-items-center">
+                            <label class="form-label my-auto" for="totEpisodi" id="lbtotEpisodi" [ngClass]="{'noValid': serieForm.controls['totEpisodi'].touched &&
+                            serieForm.controls['totEpisodi'].errors}">Numero di Episodi</label>
+                        </div>
+                        <div class="col-12 col-lg-7">
+                            <input class="form-control" type="number" name="totEpisodi" id="totEpisodi"
+                                formControlName="totEpisodi">
+                        </div>
+                    </div>
             </fieldset>
         </div>
         <div class="col-12 col-lg-6 px-3 bgForm">
@@ -220,111 +499,13 @@
                 <div class="row py-2">
                     <upload-file (files)="caricaFiles($event)"></upload-file>
                 </div>
+                <p *ngIf="error!==null">{{error}}</p>
             </fieldset>
         </div>
         <div class="col-12 col-lg-6 m-4 align-content-center">
             <div class="d-grid gap-2">
                 <button class="btn registra" type="submit" id="formSub"
                     [disabled]="!serieForm.valid || filesCaricati==null">Salva nuova Serie</button>
-            </div>
-        </div>
-    </form>
-</div>
-
-<!-- Scheda nuovo episodio -->
-<div class="col-11 m-auto my-1" *ngIf="scheda=='nuovoEpisodio'">
-    <form class="row justify-content-center" [formGroup]="episodioForm" (ngSubmit)="inviaForm()">
-        <div class="col-12 col-lg-6 px-3 bgForm">
-            <fieldset class="mt-3">
-                <legend class="m-0 fw-bold">Dati episodio</legend>
-                <div class="row py-2">
-                    <div class="col-12 col-lg-4 d-flex align-items-center">
-                        <label class="form-label my-auto" for="titolo" id="lbtitolo" [ngClass]="{'noValid': serieForm.controls['titolo'].touched &&
-                                        serieForm.controls['titolo'].errors}">Titolo</label>
-                    </div>
-                    <div class="col-12 col-lg-8">
-                        <input class="form-control" type="text" id="titolo" name="titolo" formControlName="titolo">
-                    </div>
-                </div>
-                <div class="row py-2">
-                    <div class="col-12 col-lg-4 d-flex align-items-center">
-                        <label class="form-label my-auto" for="descrizione" id="lbdescrizione" [ngClass]="{'noValid': serieForm.controls['descrizione'].touched &&
-                                        serieForm.controls['descrizione'].errors}">Descrizione</label>
-                    </div>
-                    <div class="col-12 col-lg-8">
-                        <textarea class="form-control" type="text" id="descrizione" name="descrizione"
-                            formControlName="descrizione"></textarea>
-                    </div>
-                </div>
-                <div class="row py-2">
-                    <div class="col-12 col-lg-5 d-flex align-items-center">
-                        <label class="form-label my-auto" for="durataMinuti" id="lbdurataMinuti" [ngClass]="{'noValid': serieForm.controls['durataMinuti'].touched &&
-                                        serieForm.controls['durataMinuti'].errors}">Durata episodio</label>
-                    </div>
-                    <div class="col-12 col-lg-7">
-                        <input class="form-control" type="number" name="durataMinuti" id="durataMinuti"
-                            formControlName="durataMinuti">
-                    </div>
-                </div>
-                <div class="row py-2">
-                    <div class="col-12 col-lg-4 d-flex align-items-center">
-                        <label class="form-label my-auto" for="serie" id="lbserie" [ngClass]="{'noValid': serieForm.controls['serie'].touched &&
-                                        serieForm.controls['serie'].errors}">Serie</label>
-                    </div>
-                    <div class="col-12 col-lg-8">
-                        <select class="form-select" id="serie" name="serie" formControlName="serie"
-                            aria-label="Default select example">
-                            <option selected>Open this select menu</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row py-2">
-                    <div class="col-12 col-lg-5 d-flex align-items-center">
-                        <label class="form-label my-auto" for="dataUscita" id="lbdataUscita" [ngClass]="{'noValid': serieForm.controls['dataUscita'].touched &&
-                                        serieForm.controls['dataUscita'].errors}">Data di uscita</label>
-                    </div>
-                    <div class="col-12 col-lg-7">
-                        <input class="form-control" type="date" name="dataUscita" id="dataUscita"
-                            formControlName="dataUscita">
-                    </div>
-                </div>
-                <div class="row py-2">
-                    <div class="col-12 col-lg-5 d-flex align-items-center">
-                        <label class="form-label my-auto" for="numStagione" id="lbnumStagione" [ngClass]="{'noValid': serieForm.controls['numStagione'].touched &&
-                                        serieForm.controls['numStagione'].errors}">Numero di stagioni</label>
-                    </div>
-                    <div class="col-12 col-lg-7">
-                        <input class="form-control" type="number" name="numStagione" id="numStagione"
-                            formControlName="numStagione">
-                    </div>
-                </div>
-                <div class="row py-2">
-                    <div class="col-12 col-lg-5 d-flex align-items-center">
-                        <label class="form-label my-auto" for="numEpisodio" id="lbnumEpisodio" [ngClass]="{'noValid': serieForm.controls['numEpisodio'].touched &&
-                                        serieForm.controls['numEpisodio'].errors}">Numero di stagioni</label>
-                    </div>
-                    <div class="col-12 col-lg-7">
-                        <input class="form-control" type="number" name="numEpisodio" id="numEpisodio"
-                            formControlName="numEpisodio">
-                    </div>
-                </div>
-            </fieldset>
-        </div>
-        <div class="col-12 col-lg-6 px-3 bgForm">
-            <fieldset class="mt-3">
-                <legend class="m-0 fw-bold">Carica il file</legend>
-                <div class="row py-2">
-                    <upload-file (files)="caricaFiles($event)"></upload-file>
-                </div>
-            </fieldset>
-        </div>
-        <div class="col-12 col-lg-6 m-4 align-content-center">
-            <div class="d-grid gap-2">
-                <button class="btn registra" type="submit" id="formSub"
-                    [disabled]="!serieForm.valid || filesCaricati==null">Salva nuovo Episodio</button>
             </div>
         </div>
     </form>

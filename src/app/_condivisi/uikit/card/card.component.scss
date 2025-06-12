@@ -1,0 +1,14 @@
+@import '../../../../variabili.scss';
+
+.card {
+    width: 100%;
+        cursor: pointer;
+        background-color: $primaryColor;
+    
+    video {
+        width: 100%;
+    }
+    h5 {
+        color: $tertiaryColor;
+    }
+}

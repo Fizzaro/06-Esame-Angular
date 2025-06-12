@@ -1,13 +1,20 @@
 @import "../../../../variabili.scss";
 
-label, legend {
+h5, label, legend {
     color: $lightColor;
+}
+
+.tabella {
+    height: 200px;
+    overflow-y: scroll;
 }
 
 tr,
 th,
-td {
-    background-color: $primaryColor;
+td,
+p {
+    background-color: $darkColor;
+    color: $lightColor;
 }
 
 input.ng-touched.ng-invalid {
@@ -16,7 +23,7 @@ input.ng-touched.ng-invalid {
 }
 
 .noValid {
-    color: $darkColor;
+    color: $secondaryColor;
     font-weight: bolder;
     text-decoration: underline;
 }

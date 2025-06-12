@@ -1,0 +1,46 @@
+@import '../../../variabili.scss';
+
+h3 {
+    padding: 20px 10px 0px 10px;
+    color: $lightColor;
+}
+
+multilist-carousel {
+    width: 100%;
+    padding: 10px;
+
+}
+
+#contenitoreVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    background-color: $secondaryColor;
+}
+
+#contenitoreVideo video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+button.registra {
+    font-weight: bolder;
+    color: $darkColor;
+    background-color: $secondaryColor;
+}
+
+button.accedi {
+    font-weight: bolder;
+    color: $lightColor;
+    background-color: $tertiaryColor;
+}
+
+button.elimina {
+    font-weight: bolder;
+    color: $lightColor;
+    background-color: darkred;
+}

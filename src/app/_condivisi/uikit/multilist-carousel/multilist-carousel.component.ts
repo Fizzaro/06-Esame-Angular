@@ -1,7 +1,7 @@
-import { Component, HostListener } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { MediaqueryService } from 'src/app/_servizi/mediaquery.service';
-import { Film } from 'src/app/type/film.type';
+import { Card } from 'src/app/type/card.type';
 
 @Component({
   selector: 'multilist-carousel',
@@ -10,40 +10,32 @@ import { Film } from 'src/app/type/film.type';
 })
 export class MultilistCarouselComponent {
 
-  slides: { image: string; text?: string }[] = [];
   activeSlideIndex = 0;
-
-  films: Film[] = []
   itemsPerSlide: number = 2
   singleSlideOffset = true;
-  caricaMediaQ = true
 
-  sub$: BehaviorSubject<MediaQueryList>
+  private distruggi$ = new Subject<void>
+  sub$!: BehaviorSubject<MediaQueryList>
   width: string = ''
+  caricaMediaQ = true
   mediaQ!: MediaQueryList
 
   constructor(
     private media: MediaqueryService
   ) {
-    for (let i = 0; i < 6; i++) {
-      this.addSlide();
-    }
 
-    this.sub$ = this.media.getSubMediaQ()
-    this.sub$.subscribe(x => {
-      this.mediaQ = x
-      this.width = x.media
-      this.modificaSlide()
-    })
   }
+
+  @Input() slides: Card[] = []
+  @Output() idCard= new EventEmitter<number>
 
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.media.setSubMediaQ()
     this.modificaSlide()
-
   }
 
+  //cambia numero elementi per la slide in base al dispositivo
   private modificaSlide() {
     this.caricaMediaQ = false;
     if (this.width == '(min-width: 1200px)') {
@@ -59,15 +51,25 @@ export class MultilistCarouselComponent {
     }, 100);
   }
 
-  addSlide(): void {
-    this.slides.push({
-      image: `../../../assets/loc${this.slides.length % 8 + 1}.jpg`
-    });
+  //passa il valore della card selezionata col mouse
+  passaIdCard(ev: number) {
+    this.idCard.emit(ev)
+  }
+ 
+
+  ngOnInit() {
+
+    this.sub$ = this.media.getSubMediaQ()
+    this.sub$.pipe(
+      takeUntil(this.distruggi$)
+    ).subscribe(x => {
+      this.mediaQ = x
+      this.width = x.media
+      this.modificaSlide()
+    })
   }
 
-  removeSlide(index?: number): void {
-    const toRemove = index ? index : this.activeSlideIndex;
-    this.slides.splice(toRemove, 1);
+  ngOnDestroy() {
+    this.distruggi$.next()
   }
-
 }

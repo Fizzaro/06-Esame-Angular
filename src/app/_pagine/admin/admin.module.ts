@@ -9,6 +9,7 @@ import { UikitModule } from "../../_condivisi/uikit/uikit.module";
 import { AdminRoutingModule } from './admin-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CategorieVideoComponent } from './categorie-video/categorie-video.component';
+import { EpisodiCatalogoComponent } from './episodi-catalogo/episodi-catalogo.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { CategorieVideoComponent } from './categorie-video/categorie-video.compo
     UtentiComponent,
     FilmCatalogoComponent,
     SerieCatalogoComponent,
-    CategorieVideoComponent
+    CategorieVideoComponent,
+    EpisodiCatalogoComponent
   ],
   imports: [
     CommonModule,

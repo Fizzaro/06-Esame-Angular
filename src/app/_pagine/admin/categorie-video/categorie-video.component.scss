@@ -1,0 +1,37 @@
+@import "../../../../variabili.scss";
+
+label, legend {
+    color: $lightColor;
+}
+
+input.ng-touched.ng-invalid {
+    border: 2px solid red;
+   
+}
+
+.noValid {
+    color: $secondaryColor;
+    font-weight: bolder;
+    text-decoration: underline;
+}
+
+button.registra {
+    margin: auto;
+    font-weight: bolder;
+    color: $darkColor;
+    background-color: $secondaryColor;
+}
+
+button.accedi {
+    margin: auto;
+    font-weight: bolder;
+    color: $lightColor;
+    background-color: $tertiaryColor;
+}
+
+button.elimina {
+    margin: auto;
+    font-weight: bolder;
+    color: $lightColor;
+    background-color: darkred;
+}

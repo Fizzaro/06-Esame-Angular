@@ -6,6 +6,7 @@ import { CardComponent } from './card/card.component';
 import { FirstCarouselComponent } from './first-carousel/first-carousel.component';
 import { UploadFileComponent } from './upload-file/upload-file.component';
 import { DragDropDirective } from 'src/app/_direttive/drag-drop.directive';
+import { AnteprimaDirective } from 'src/app/_direttive/anteprima.directive';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,8 @@ import { DragDropDirective } from 'src/app/_direttive/drag-drop.directive';
     CardComponent,
     FirstCarouselComponent,
     UploadFileComponent,
-    DragDropDirective
+    DragDropDirective,
+    AnteprimaDirective
   ],
   imports: [
     CommonModule,

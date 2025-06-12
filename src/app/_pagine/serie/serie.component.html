@@ -1,3 +1,47 @@
-<div class="p-0 m-0">
-    <first-carousel></first-carousel>
+<div *ngIf="serieSelezionata==null && serie">
+    <div class="p-0 m-0">
+        <first-carousel></first-carousel>
+    </div>
+
+    <div class="p-0 m-0" *ngFor="let categoria of categorie">
+        <h3>Serie {{categoria.categoria}}</h3>
+        <multilist-carousel [slides]="cardAnteprima" (idCard)="rilevaIdCard($event)"></multilist-carousel>
+    </div>
+
 </div>
+
+
+<!-- Pagina di dettaglio -->
+
+<ng-container *ngIf="serieSelezionata!==null">
+    <div class="d-flex w-100 flex-md-row flex-column-reverse">
+        <div class="col-12 col-md-4 text-light p-3">
+            <h2>{{serieSelezionata.titolo}}</h2>
+            <h4>Regia: {{serieSelezionata.regista}}</h4>
+            <h5>Interpreti: {{serieSelezionata.attori}}</h5>
+            <h6>Stagioni: {{serieSelezionata.totStagioni}}</h6>
+            <p>{{serieSelezionata.descrizione}}</p>
+
+            <div class="row">
+                <div class="col-5 pe-2"><button class="btn registra" (click)="serieSelezionata=null">Indietro</button>
+                </div>
+                <div class="col-4"><button class="btn accedi" (click)="partiVideo=true">Play</button></div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-8 py-3">
+            <img src="{{cardSelezionata.image}}" alt="" width="100%" height="500px">
+        </div>
+    </div>
+    <h3>Altre serie {{ritornaCategoria(serieSelezionata.idCategoria)}}</h3>
+    <multilist-carousel [slides]="cardAnteprima" (idCard)="rilevaIdCard($event)"></multilist-carousel>
+</ng-container>
+
+<ng-container *ngIf="partiVideo">
+    <div id="contenitoreVideo">
+        <button class="btn elimina" (click)="partiVideo=false">X</button>
+        <video id="mioVideo" controls autoplay>
+            <source src="{{cardSelezionata.video}}" type="video/mp4">
+        </video>
+    </div>
+</ng-container>

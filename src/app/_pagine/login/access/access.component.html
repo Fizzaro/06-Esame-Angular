@@ -27,14 +27,15 @@
                             <div class="d-grid gap-2"><button class="btn accedi" type="submit"
                                     [disabled]="!reactiveLogin.valid">Accedi</button></div>
                         </div>
-                            <div class="pt-2 col-12">
-                                <div class="form-check text-center">
-                                    <label class="form-check-label fs-5" for="collegato">
-                                        Resta collegato
-                                        <input class="form-check-input" type="checkbox" formControlName="collegato" id="collegato">
-                                    </label>
-                                </div>
+                        <div class="pt-2 col-12">
+                            <div class="form-check text-center">
+                                <label class="form-check-label fs-5" for="collegato">
+                                    Resta collegato
+                                    <input class="form-check-input" type="checkbox" formControlName="collegato"
+                                        id="collegato">
+                                </label>
                             </div>
+                        </div>
                     </form>
                     <div>
                         <p class="fw-bold text-danger">{{erroreLogin}}</p>
@@ -54,10 +55,18 @@
                     </div>
                 </ng-container>
                 <ng-container *ngIf="(auth$ | async)?.token!==null">
-                    <p class="h2" style="opacity: 1;">Sei già LOGGATO!</p>
-                    <div class="d-grid gap-2 mt-3">
-                        <button class="btn accedi" type="button" routerLink="../../home">Vai alla home</button>
-                    </div>
+                    <ng-container *ngIf="(auth$ | async)?.attivo==true && ((auth$ | async)?.amministratore==true || (auth$ | async)?.membro==true)">
+                        <p class="h2" style="opacity: 1;">Sei già LOGGATO!</p>
+                        <div class="d-grid gap-2 mt-3">
+                            <button class="btn accedi" type="button" routerLink="../../home">Vai alla home</button>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="(auth$ | async)?.amministratore!==true && (auth$ | async)?.membro!==true || (auth$ | async)?.attivo!==true">
+                        <p class="h2" style="opacity: 1;">Non hai pagato l'abbonamento!!</p>
+                        <div class="d-grid gap-2 mt-3">
+                            <button class="btn registra" type="button" (click)="logout()">LOGOUT</button>
+                        </div>
+                    </ng-container>
                 </ng-container>
             </div>
             <div class="modal-footer">

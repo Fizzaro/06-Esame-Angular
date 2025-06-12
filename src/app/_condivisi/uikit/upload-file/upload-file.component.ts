@@ -15,7 +15,6 @@ export class UploadFileComponent {
   changeInput(e: Event): void {
     const elemento = e.currentTarget as HTMLInputElement
     const files: FileList | null = elemento.files
-    console.log('entrato')
     if (files && files !== null) {
       this.controllaFiles(files)
     }
@@ -36,13 +35,14 @@ export class UploadFileComponent {
   controllaFiles(files: FileList): void {
     if (files !== null && files.length > 0) {
       for (let i = 0; i < files.length; i++) {
-        if (this.getFileExtension(files[i].name) !== 'jpg') {
+        const extension=this.getFileExtension(files[i].name) 
+        if (extension !== 'jpg' && extension !== 'mp4') {
           this.errore = 'L\'estensione di uno o più file è sbagliata'
           break
         } else if (this.fileExist(files[i].name)) {
           this.errore='Uno o più file già caricati'
           break
-        } else if (files[i].size > 2 * 1024 * 1024) {
+        } else if (files[i].size > 8 * 1024 * 1024) {
           this.errore = 'Uno o più file troppo grandi'
           break
         } else {

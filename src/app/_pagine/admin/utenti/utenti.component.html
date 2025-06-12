@@ -16,7 +16,7 @@
 <div class="col-11 m-auto py-3" *ngIf="scheda=='utenti'">
     <h5>Cerca per Codice Fiscale</h5>
     <form [formGroup]="control">
-        <input class="form-control" type="text" formControlName="ricerca" (input)="apiUtenti()">
+        <input class="form-control" type="text" formControlName="ricerca" (input)="leggiUtente()">
     </form>
     <div class="col-12 mt-5 overflow-x-scroll">
         <table class="col-12">
