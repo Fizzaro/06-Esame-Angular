@@ -124,6 +124,7 @@ export class IndirizziRecapitiComponent {
       this.indirizzoForm.controls['tipoIndirizzo'].setValue(indirizzo.idTipologiaIndirizzo)
       this.indirizzoForm.controls['comuneIndirizzo'].setValue(comune)
       this.indirizzoForm.controls['indirizzo'].setValue(indirizzo.indirizzo)
+      this.conservoIdIndirizzo=indirizzo.idIndirizzo
     }
   }
 

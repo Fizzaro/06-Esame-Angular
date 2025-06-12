@@ -102,11 +102,13 @@ export class RegisterComponent {
   controllaCF(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const codFiscControl = control
-      const codFiscValue = codFiscControl.value
+      const codFiscValue = (codFiscControl.value).replace(/\s/g, " ");
       let s: number = 0
       let ok: boolean = false
 
       if (codFiscValue != '') {
+        // const codFiscValue = codValue.replace(/\s/g, " ");
+        // console.log(codValue, ' - ', codFiscValue)
         this.messCodFisc = ''
         let cf: string = codFiscValue.toUpperCase()
 

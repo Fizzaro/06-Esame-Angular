@@ -121,12 +121,12 @@
                                 </fieldset>
                                 <div class="m-3">
                                     <ng-container *ngIf="indirizzoTable=='Elimina'">
-                                        <button class="btn elimina" type="button"
+                                        <button class="btn elimina" type="submit"
                                             [disabled]="!indirizzoForm.valid">{{indirizzoTable}}
                                             indirizzo</button>
                                     </ng-container>
                                     <ng-container *ngIf="indirizzoTable!=='Elimina'">
-                                        <button class="btn accedi" type="button"
+                                        <button class="btn accedi" type="submit"
                                             [disabled]="!indirizzoForm.valid">{{indirizzoTable}}
                                             indirizzo</button>
                                     </ng-container>
@@ -224,12 +224,12 @@
                             </fieldset>
                             <div class="m-3">
                                 <ng-container *ngIf="recapitoTable=='Elimina'">
-                                    <button class="btn elimina" type="button"
+                                    <button class="btn elimina" type="submit"
                                         [disabled]="!recapitoForm.valid">{{recapitoTable}}
                                         recapito</button>
                                 </ng-container>
                                 <ng-container *ngIf="recapitoTable!=='Elimina'">
-                                    <button class="btn accedi" type="button"
+                                    <button class="btn accedi" type="submit"
                                         [disabled]="!recapitoForm.valid">{{recapitoTable}}
                                         recapito</button>
                                 </ng-container>
